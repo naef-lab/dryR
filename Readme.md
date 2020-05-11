@@ -3,9 +3,11 @@
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+These instructions will get you a `dryR` running on your machine. 
 
 ### Prerequisites
+You need to install R https://www.r-project.org/. 
+
 `dryR` accepts count data typically produced by RNA-Seq with a time dimension and several conditions/groups. The input count data should contain only integer values and be organized in a matrix with rows indicating a specific gene and the column refering to a sample. 
 
 The pipelines to produce these count data from RNA-Seq data (FASTQ files) are described in more details here:

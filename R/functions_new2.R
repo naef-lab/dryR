@@ -427,9 +427,7 @@ parameters            = parameters[rownames(countData),]
 
    message("finished!")
    return(out)
-
    # to add flags for low expression, high cook's distance
-
 
 }
 

@@ -1,11 +1,11 @@
-#' A Cat Function
+#' Visualization of dryseq results
 #'
-#' This function allows you to express your love of cats.
-#' @param love Do you love cats? Defaults to TRUE.
-#' @keywords cats
-#' @export
+#' This function allows to plot the results of dryseq.
+#' @param DF results from dryseq
+#' @param file_path_name folder to store output
+#' @export pdf that summarize the results of dryseq
 #' @examples
-#' cat_function()
+#' XYZ
 plot_models_rhythm = function(DF,file_path_name,time,group, period=24){
 
   x=DF

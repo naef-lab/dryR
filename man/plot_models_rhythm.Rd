@@ -2,17 +2,18 @@
 % Please edit documentation in R/function_plot_models_rhythm.R
 \name{plot_models_rhythm}
 \alias{plot_models_rhythm}
-\title{A Cat Function}
+\title{Visualization of dryseq results}
 \usage{
 plot_models_rhythm(DF, file_path_name, time, group, period = 24)
 }
 \arguments{
-\item{love}{Do you love cats? Defaults to TRUE.}
+\item{DF}{results from dryseq}
+
+\item{file_path_name}{folder to store output}
 }
 \description{
-This function allows you to express your love of cats.
+This function allows to plot the results of dryseq.
 }
 \examples{
-cat_function()
+XYZ
 }
-\keyword{cats}

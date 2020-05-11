@@ -33,7 +33,7 @@ dryseq(
 a list that contains the following data.frames: results (summary of results), parameters (rhythmic parameters), ncounts (normalized counts), counts (raw counts), cook (cook's distance)
 }
 \description{
-This function performs a rhythmicity analysis based on generalized linear models with a subsequent models selection. The function accepts raw count data from a temporal RNA-Seq dataset of two or more groups. Parameters mean, phase and amplitude are given for each group.
+This function performs a rhythmicity analysis based on generalized linear models with a subsequent models selection. The function accepts raw count data from a temporal RNA-Seq dataset of two or more groups. The function outputs parameters mean, phase and amplitude are for each group.
 }
 \details{
 DRAFT: DryR assesses rhythmicity and mean differences of gene expression in RNA-Seq count data.
@@ -63,9 +63,9 @@ DRAFT: DryR assesses rhythmicity and mean differences of gene expression in RNA-
      The model selection is sensitive to outliers: dryseq provide a cook's distance for each gene. A fit for a gene with a maximum cook's distance of higher than 1 should be considered with care.
 }
 \examples{
-countData = simData$abundData
-group = simData$sampleMetadata$cond
-time  = simData$sampleMetadata$time
+countData = simData[["countData"]]
+group = simData[["group"]]
+time  = simData[["time"]]
 dryList = dryseq(countData,group,time)
 head(dryList[["results"]])    # data frame summarizing results
 head(dryList[["parameters"]]) # coefficients: phase, amplitude and mean for each group

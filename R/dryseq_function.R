@@ -10,9 +10,9 @@
 #' @param batch	vector containing potential batch effects between samples.
 #' @param nthreads vector numeric value to indicate the threads for parallel computing .
 #' @return a list that contains the following data.frames: results (summary of results), parameters (rhythmic parameters), ncounts (normalized counts), counts (raw counts), cook (cook's distance)
-#' @examples countData = simData$abundData
-#' group = simData$sampleMetadata$cond
-#' time  = simData$sampleMetadata$time
+#' @examples countData = simData[["countData"]]
+#' group = simData[["group"]]
+#' time  = simData[["time"]]
 #' dryList = dryseq(countData,group,time)
 #' head(dryList[["results"]])    # data frame summarizing results
 #' head(dryList[["parameters"]]) # coefficients: phase, amplitude and mean for each group

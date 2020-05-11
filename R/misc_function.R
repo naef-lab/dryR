@@ -1,0 +1,243 @@
+#####################################
+comb = function(n,k){
+  factorial(n)/(factorial(k)*factorial(n-k))
+}
+#####################################
+nbt = function(x){
+  l=length(which(x) == TRUE)
+  l
+}
+#####################################
+simply_it = function(x){
+  a = 0
+  for(i in x) {
+    a= paste(a,paste(which(x == as.numeric(i)), collapse = "",sep = ""), collapse = "", sep = "")
+  }
+  a
+}
+#####################################
+simply_it.2 = function(x){
+
+  a = match(x,x)
+}
+#####################################
+make_circ_coord = function(t,x,ttot) {
+  dt=(t[2]-t[1])*.45
+  a=(rep(t,rep(4,length(t)))+rep(c(-dt,-dt,dt,dt),length(t)))*2*pi/ttot
+  h=rep(x,rep(4,length(x)))*rep(c(0,1,1,0),length(t))
+  list(angles=a,heights=h)
+}
+#####################################
+circular_phase24H_histogram = function(x,name,ttot){
+  color_hist = rgb(0.6,0,0.2)
+  br=0:ttot
+  h=hist(x, br=br,plot=F)
+  co=make_circ_coord(br[-1],h$counts,ttot)
+  radial.plot(co$heights,co$angle,br[-1]-br[2],
+              clockwise=T,start=pi/2,main=paste("",name),
+              rp.type='p',poly.col=color_hist, xlab = "",ylab = "", show.grid.labels=0)
+}
+#####################################
+compute_BICW = function(x){
+  x = as.numeric(x)
+  BIC_min = min(x)
+  test = exp(-0.5*(x-BIC_min))/sum(exp(-0.5*(x-BIC_min)))
+  return(test)
+}
+#####################################
+compute_param = function(dds, gene, period=T_,N){
+
+  dds = dds[gene,]
+  param = c(paste(rep(c('u','a','b'),each=N),rep(1:N,3), sep = "."))
+
+  paramout = rep(NA,N*6)
+
+  for(i in 1:N){
+
+    u=coef(dds)[grep(paste(param[i],"Intercept",sep="|"), colnames(coef(dds)))]
+    a=coef(dds)[grep(param[i+N], colnames(coef(dds)))]
+    b=coef(dds)[grep(param[i+N*2], colnames(coef(dds)))]
+
+    if(length(u) ==0) u=NA
+    if(length(a) ==0) a=NA
+    if(length(b) ==0) b=NA
+
+    phase=period/(2*pi)*atan2(b,a)
+    amp =2*sqrt(a^2+b^2)
+    relamp=0.5*amp/u
+    if(!is.na(phase)){
+      #if(phase<0) phase=phase+period
+      #if(phase>period) phase=phase-period
+      phase=phase%%period
+    }
+    paramout[(1:6 + 6*(i-1))] = c(u,a,b,amp,relamp,phase)
+  }
+
+  #names(paramout) = c(paste(c('mean','a','b','amp','relamp','phase'),rep(1:N,each =6), sep = "_"))
+  paramout
+}
+#####################################
+create_matrix_list = function(t,co,period){
+  my_matrix = list()
+
+  c=cos(2*pi*t/period)
+  s=sin(2*pi*t/period)
+
+  MAT = cbind(rep(1,length(t)/co),c[1:(length(t)/co)],s[1:(length(t)/co)])
+  GMAT = matrix(NA,ncol=3*co, nrow =length(t))
+  colnames(GMAT) = c(paste(c('u','a','b'),rep(1:co,each =3), sep = "."))
+  for(i in 1:co){
+    border = length(t)/co
+    s = (i-1)*border + 1
+    e = i*border
+    sr = (i-1)*3 + 1
+    er = i*3
+    GMAT[s:e,sr:er] = MAT
+  }
+
+
+  sum_m = 0
+  for(i in 0:co){
+    sum_m = sum_m + comb(co,i)
+  }
+  vn = rep(F,co)
+  for(i in 1:co){
+    g = rep(F,co)
+    g[1:i] = TRUE
+
+    p = unique(permn(g))
+    v = matrix(unlist(p),ncol = co,byrow = TRUE)
+    vn = rbind(vn,v)
+
+  }
+
+
+  mp = seq(1,3*co,3)
+  vn = vn[,rep(1:co,each=3)]
+  vn[,seq(1,3*co,3)] = TRUE
+  vn = data.frame(vn)
+  vn[,dim(vn)[2] + 1]=(apply(vn,1,nbt)-co)/2
+  colnames(vn) = c(paste(c('u','a','b'),rep(1:co,each =3), sep = "."),'nb_cycl')
+
+  model = 1
+  for(g in 0:co){
+
+
+    nb_cycl =g
+    com = expand.grid(rep(list(1:nb_cycl),nb_cycl))
+    simply = apply(com,1,simply_it)
+    poss =match(unique(simply),simply)
+    com_l = com[poss,]
+    pos = which(vn$nb_cycl == g)
+
+    for(k in pos){
+      if(g > 1){
+        for(v in 1:nrow(com_l)){
+          gmat = GMAT[,unlist(vn[k,-ncol(vn) ])]
+          ve = as.numeric(com_l[v,])
+          id =1
+          sa = ve
+          while(length(ve) !=0){
+
+            poc = which(sa == ve[1])
+            po = which(ve ==ve[1])
+            if(length(poc) !=1){
+              poch =c(2*poc-1,2*poc)
+              poch =poch[order(poch)]
+              he = grep("[ab]",colnames(gmat))
+              he = he[poch]
+              pp=0
+              for( z in 1:((length(he)-2)/2)){
+                repl1 = which(gmat[,he[2*z+1]]!='NA')
+                repl2 = which(gmat[,he[2*z+2]]!='NA')
+                gmat[repl1,he[1]] = gmat[repl1,he[2*z+1]]
+                gmat[repl2,he[2]] = gmat[repl2,he[2*z+2]]
+                colnames(gmat)[he[1]]= paste(colnames(gmat)[he[1]],colnames(gmat)[he[2*z+1]],sep=',')
+                colnames(gmat)[he[2]]= paste(colnames(gmat)[he[2]],colnames(gmat)[he[2*z+2]],sep=',')
+                gmat[repl1,he[2*z+1]] =NA
+                gmat[repl2,he[2*z+2]]=NA
+                pp = pp+2
+              }
+              id = id+1
+              ve = ve[-po]
+            }else{
+              ve = ve[-1]
+            }
+
+          }
+          gmat[is.na(gmat)] =0
+          del=which(apply(gmat,2,function(x) length(which(x == 0))) == length(t))
+          if(length(del)!=0){
+            gmat = gmat[,-del]
+          }
+          my_matrix[[model]] = gmat
+          model = model + 1
+        }
+      }else{
+        gmat = GMAT[,unlist(vn[k,-ncol(vn) ])]
+        gmat[is.na(gmat)] =0
+        del =which(apply(gmat,2,function(x) length(which(x == 0))) == length(t))
+        if(length(del)!=0){
+          gmat = gmat[,-del]
+        }
+        my_matrix[[model]] = gmat
+        model = model +1
+      }
+    }
+
+  }
+
+
+
+  return(my_matrix)
+}
+#####################################
+create_matrix_list_mean = function(N,group){
+  com = expand.grid(rep(list(1:N),N))
+  simply = as.data.frame(t(apply(com,1,simply_it.2)))
+  simply = do.call("paste",simply)
+  poss =match(unique(simply),simply)
+  com_l = com[poss,]
+  names(com_l)=unique(group)
+  com_l=com_l[order(apply(com_l,1,function(x) length(unique(x))),apply(com_l,1,function(x) length(which(x==max(x))))),]
+  rownames(com_l)=1:nrow(com_l)
+  heatmap.2(as.matrix(com_l),
+            dendrogram='none',
+            Rowv=FALSE,
+            Colv=FALSE,
+            trace='none',
+            col=brewer.pal(n = 8, name = 'Set2'),
+            colsep=1:ncol(com_l),
+            rowsep=1:nrow(com_l),
+            cexRow=0.8,
+            cexCol = 0.8,
+            key = FALSE)
+
+
+  com_l=com_l[,rep(1:N,times=table(group))]
+  p=list()
+  for(j in 1:nrow(com_l)){
+    if(j==1){
+      p[[j]] = as.matrix(rep(1,ncol(com_l)))
+
+    }else{
+      p[[j]]= model.matrix(~0+ factor(as.numeric(com_l[j,])))
+    }
+  }
+  p
+}
+#####################################
+annotate_matrix = function(m,group){
+  if(ncol(m)==1){
+    colnames(m)=paste("u",1:length(unique(group)),sep=".",collapse=".")
+  }else{
+    pos_ind= match(unique(group),group)
+    m=as.matrix(m)
+    l=list()
+    for(k in 1:ncol(m)){
+      l[[k]]=as.numeric(which(m[pos_ind,k]==1))
+    }
+    colnames(m)=sapply(l,function(x) paste("u",x,sep=".",collapse="."))
+  }
+  m
+}

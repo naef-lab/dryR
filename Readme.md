@@ -10,7 +10,7 @@ You need to install R (see https://www.r-project.org/).
 
 `dryR` accepts count data typically produced by RNA-Seq with a time dimension and several conditions/groups. The input count data should contain only integer values and be organized in a matrix with rows indicating a specific gene and the column refering to a sample. 
 
-The pipelines to produce these count data from RNA-Seq data (FASTQ files) are described in more details here:
+The pipelines that can be used to produce these count data from RNA-Seq data (FASTQ files) are described in more details here:
 http://master.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html
 
 A user-friendly web application to generate a count table from FASTQ files is provided here: https://amp.pharm.mssm.edu/biojupies/

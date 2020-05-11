@@ -33,7 +33,7 @@ dryseq(
 a list that contains the following data.frames: results (summary of results), parameters (rhythmic parameters), ncounts (normalized counts), counts (raw counts), cook (cook's distance)
 }
 \description{
-This function performs a rhythmicity analsysis based on generalized linear models with a subsequent models selection. The function accepts raw count data from a temporal RNA-Seq dataset of two or more groups. Parameters mean, phase and amplitude are given for each group.
+This function performs a rhythmicity analysis based on generalized linear models with a subsequent models selection. The function accepts raw count data from a temporal RNA-Seq dataset of two or more groups. Parameters mean, phase and amplitude are given for each group.
 }
 \details{
 DRAFT: DryR assesses rhythmicity and mean differences of gene expression in RNA-Seq count data.
@@ -74,11 +74,7 @@ head(dryList[["counts"]])     # raw counts
 head(dryList[["cook"]])       # cook's distance
 }
 \references{
-<<<<<<< HEAD
 Love, M.I., Huber, W., Anders, S. (2014) Moderated estimation of fold change and dispersion for RNA-seq data with DESeq2. Genome Biology
 
 Anders, S. and Huber, W. (2014) Moderated estimation of fold change and dispersion for RNA-seq data with DESeq2. Genome Biology
-=======
-xxxxx
->>>>>>> 3d6cd70c63a3dfa074247802503ad7026033c5a5
 }

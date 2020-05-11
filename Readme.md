@@ -6,15 +6,16 @@
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
 ### Prerequisites
+`dryR` accepts count data typically produced by RNA-Seq with a time dimension and several conditions/groups. The input count data should contain only integer values and be organized in a matrix with rows indicating a specific gene and the column refering to a sample. 
 
-R uses raw counts 
+The generation . More details can be found here:
+http://master.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html
 
-dryR accepts a raw count dataset . Each row 
-To get such a file you might want to use to map. or use https://amp.pharm.mssm.edu/biojupies/
+A user-friendly way to retrieve a count table from fastq files is provided here: https://amp.pharm.mssm.edu/biojupies/
 
 ### Installing
 
-To install dryR run the following code in R.
+To install `dryR` run the following code in R.
 ```
 install.packages("devtools")
 devtools::install_github("benjaminweger/dryR")

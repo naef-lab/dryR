@@ -1,16 +1,16 @@
 # dryR
-`dryR` is an R package that provides the statistical framework to assess differential rhythmicity of a time series of RNA-Seq data of two and more conditions.
+`dryR` is an R package that provides the statistical framework to assess differential rhythmicity of a time series of RNA-Seq data with two and more conditions.
 
 ## Getting Started
 
-These instructions will get you a `dryR` running on your machine. 
+These instructions will allow you to get `dryR` running on your machine. 
 
 ### Prerequisites
 You need to install R (see https://www.r-project.org/). 
 
 `dryR` accepts count data typically produced by RNA-Seq with a time dimension and several conditions/groups. The input count data should contain only integer values and be organized in a matrix with rows indicating a specific gene and the column refering to a sample. 
 
-The pipelines that can be used to produce these count data from RNA-Seq data (FASTQ files) are described in more details here:
+The pipelines that can be used to produce these count data from RNA-Seq data (FASTQ files) are described in more detail here:
 http://master.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html
 
 A user-friendly web application to generate a count table from FASTQ files is provided here: https://amp.pharm.mssm.edu/biojupies/

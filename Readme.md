@@ -7,7 +7,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-R 
+R uses raw counts 
 
 dryR accepts a raw count dataset . Each row 
 To get such a file you might want to use to map. or use https://amp.pharm.mssm.edu/biojupies/
@@ -21,8 +21,7 @@ devtools::install_github("benjaminweger/dryR")
 ```
 
 ## example dataset 
-`dryR` comes with example data in form of a list called simData. The list contains raw count data simData[["countData"]], a vector with the different conditions/groups simData[["group"]], and a vector indicating Zeitgber Time simData[["time"]]. The data has been generate using simphony https://github.com/hugheylab/simphony.
-
+`dryR` comes with example data in form of a list called simData. The list contains raw count data simData[["countData"]], a vector with the different conditions/groups simData[["group"]], and a vector indicating Zeitgeber Time simData[["time"]]. The data has been generate using simphony https://github.com/hugheylab/simphony.
 
 ## Running an example
 ```
@@ -44,3 +43,5 @@ dryList[["counts"]]     # raw counts
 dryList[["cook"]]       # cook's distance for outlier detection
 ```
 
+## Help
+A documentation using `?dryseq` is available. 

@@ -74,7 +74,11 @@ head(dryList[["counts"]])     # raw counts
 head(dryList[["cook"]])       # cook's distance
 }
 \references{
+<<<<<<< HEAD
 Love, M.I., Huber, W., Anders, S. (2014) Moderated estimation of fold change and dispersion for RNA-seq data with DESeq2. Genome Biology
 
 Anders, S. and Huber, W. (2014) Moderated estimation of fold change and dispersion for RNA-seq data with DESeq2. Genome Biology
+=======
+xxxxx
+>>>>>>> 3d6cd70c63a3dfa074247802503ad7026033c5a5
 }

@@ -1,7 +1,7 @@
 Package: dryR
 Type: Package
 Title: Differential Rhythmicity analysis of count data
-Version: 0.1.0
+Version: 0.2.0
 Author: Cedric Gobet and Benjamin Weger
 Maintainer: The package maintainer <Cedric.Gobet@epfl.cht>
 Description: DryR ( Differential RhythmicitY analysis in R) is a bayesian statistical

@@ -2,7 +2,7 @@
 % Please edit documentation in R/dryseq_function.R
 \name{dryseq}
 \alias{dryseq}
-\title{A Cat Function}
+\title{Differential rhythmicity analysis for RNA-Seq datasets}
 \usage{
 dryseq(
   countData,
@@ -28,10 +28,16 @@ dryseq(
 \item{nthreads}{vector numeric value to indicate the threads for parallel computing .}
 }
 \description{
-This function allows you to express your love of cats.
+This function accepts raw count data from a temporal of 2 or more groups and . PArameters mean, phase and amplitude are given for each group.
 }
 \examples{
 load("simulatedData.RData")
 countData = simData$abundData
-dryseq_function()
+rownames(countData) = paste("feature",1:nrow(countData),sep="_")
+group = simData$sampleMetadata$cond
+time  = simData$sampleMetadata$time
+dryList = dryseq(countData,group,time)
+head(dryList[["results"]])
+head(dryList[["parameters"]])
+
 }

@@ -15,26 +15,15 @@ Give examples
 
 R
 
-Raw count table from fastq files.
+Raw count table from fastq files and how to get it. 
 
 ### Installing
 
-A step by step series of examples that tell you how to get a development env running
-
-Say what the step will be
-
+To install dryR run the following code in R.
 ```
 install.packages("devtools")
 devtools::install_github("benjaminweger/dryR")
 ```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
 
 ## Running an example
 ```
@@ -52,7 +41,7 @@ dryList   = dryseq(countData,group,time)
 dryList[["results"]]    # data frame summarizing results
 dryList[["parameters"]] # coefficients: phase, amplitude and mean for each group
 dryList[["ncounts"]]    # normalized counts
-dryList[["counts"]]# raw counts
-dryList[["cook"]]  # cook's distance
+dryList[["counts"]]     # raw counts
+dryList[["cook"]]       # cook's distance for outlier detection
 ```
 

@@ -37,7 +37,21 @@ until finished
 End with an example of getting some data out of the system or using it for a little demo
 
 ## Running the tests
+require("dryR")
 
-Explain how to run the automated tests for this system
+# prepare arguments
+countData = simData[["countData"]]
+group     = simData[["group"]]
+time      = simData[["time"]]
+
+# run the analysis
+dryList   = dryseq(countData,group,time)
+
+# explore the results
+dryList[["results"]]    # data frame summarizing results
+dryList[["parameters"]] # coefficients: phase, amplitude and mean for each group
+dryList[["ncounts"]]    # normalized counts
+dryList[["counts"]]# raw counts
+dryList[["cook"]]  # cook's distance
 
 

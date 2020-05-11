@@ -8,7 +8,7 @@ dryseq(
   countData,
   group,
   time,
-  T_ = 24,
+  period = 24,
   sample_name = colnames(countData),
   batch = rep("A", length(sample_name)),
   n.cores = round(detectCores() * 0.6, 0)
@@ -21,23 +21,25 @@ dryseq(
 
 \item{time}{vector containing numeric values of the time for each sample.}
 
-\item{T_}{numeric value to indicate period length of the oscillation.}
+\item{period}{numeric value to indicate period length of the oscillation. Default for circadian data 24 h.}
+
+\item{sample_name}{vector containing sample names.}
 
 \item{batch}{vector containing potential batch effects between samples.}
 
 \item{nthreads}{vector numeric value to indicate the threads for parallel computing .}
 }
 \description{
-This function accepts raw count data from a temporal of 2 or more groups and . PArameters mean, phase and amplitude are given for each group.
+This function accepts raw count data from a temporal RNA-Seq dataset of 2 or more groups. Parameters mean, phase and amplitude are given for each group.
 }
 \examples{
-load("simulatedData.RData")
 countData = simData$abundData
-rownames(countData) = paste("feature",1:nrow(countData),sep="_")
 group = simData$sampleMetadata$cond
 time  = simData$sampleMetadata$time
 dryList = dryseq(countData,group,time)
-head(dryList[["results"]])
-head(dryList[["parameters"]])
-
+head(dryList[["results"]])    # data frame summarizing results
+head(dryList[["parameters"]]) # coefficients: phase, amplitude and mean for each group
+head(dryList[["ncounts"]])    # normalized counts
+head(dryList[["counts"]])     # raw counts
+head(dryList[["cook"]])       # cook's distance
 }

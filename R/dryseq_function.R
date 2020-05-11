@@ -1,24 +1,25 @@
 #' Differential rhythmicity analysis for RNA-Seq datasets
 #'
-#' This function accepts raw count data from a temporal of 2 or more groups and . PArameters mean, phase and amplitude are given for each group.
+#' This function accepts raw count data from a temporal RNA-Seq dataset of 2 or more groups. Parameters mean, phase and amplitude are given for each group.
 #' @param countData	matrix containing non-negative integers; each column represents a sample, each row represents a gene/transcript.
 #' @param group	vector containing the name of each sample.
 #' @param time	vector containing numeric values of the time for each sample.
 #' @param countData	matrix containing non-negative integers; each column represents a sample, each row represents a gene/transcript.
-#' @param T_	numeric value to indicate period length of the oscillation.
+#' @param period	numeric value to indicate period length of the oscillation. Default for circadian data 24 h.
+#' @param sample_name	vector containing sample names.
 #' @param batch	vector containing potential batch effects between samples.
 #' @param nthreads vector numeric value to indicate the threads for parallel computing .
-#' @export a list that contains the following data.frames: results (summary of results), etc. pp..
-#' @examples load("simulatedData.RData")
-#' countData = simData$abundData
-#' rownames(countData) = paste("feature",1:nrow(countData),sep="_")
+#' @export a list that contains the following data.frames: results (summary of results), parameters (rhythmic parameters), ncounts (normalized counts), counts (raw counts), cook (cook's distance)
+#' @examples countData = simData$abundData
 #' group = simData$sampleMetadata$cond
 #' time  = simData$sampleMetadata$time
 #' dryList = dryseq(countData,group,time)
-#' head(dryList[["results"]])
-#' head(dryList[["parameters"]])
-#'
-dryseq=function(countData,group,time,T_=24,sample_name=colnames(countData),batch=rep("A",length(sample_name)),n.cores=round(detectCores()*.6,0) ){
+#' head(dryList[["results"]])    # data frame summarizing results
+#' head(dryList[["parameters"]]) # coefficients: phase, amplitude and mean for each group
+#' head(dryList[["ncounts"]])    # normalized counts
+#' head(dryList[["counts"]])     # raw counts
+#' head(dryList[["cook"]])       # cook's distance
+dryseq=function(countData,group,time,period=24,sample_name=colnames(countData),batch=rep("A",length(sample_name)),n.cores=round(detectCores()*.6,0) ){
   require('DESeq2')
   require("combinat")
   require("parallel")
@@ -32,8 +33,8 @@ dryseq=function(countData,group,time,T_=24,sample_name=colnames(countData),batch
 
   countData = countData[rowSums(countData)!=0,]
 
-  s1 <- sin(2*pi*time/T_)
-  c1 <- cos(2*pi*time/T_)
+  s1 <- sin(2*pi*time/period)
+  c1 <- cos(2*pi*time/period)
 
   conds  = cbind(group,s1,c1,batch)
   colnames(conds) = c("group","s1","c1","batch")
@@ -46,7 +47,7 @@ dryseq=function(countData,group,time,T_=24,sample_name=colnames(countData),batch
 
   message("fitting rhythmic models")
 
-  models = create_matrix_list(time,N,T_)
+  models = create_matrix_list(time,N,period)
   #Reorder u, a, b
   models = lapply(models, function(l) l[,c(grep("u",colnames(l)),grep("a|b",colnames(l)))]   )
 
@@ -61,13 +62,11 @@ dryseq=function(countData,group,time,T_=24,sample_name=colnames(countData),batch
     models = lapply(models, function(l) l[,c(grep("u",colnames(l)),grep("BATCH",colnames(l)),grep("a|b",colnames(l)))]   )
   }
 
-
-
-  dds = DESeqDataSetFromMatrix(countData = countData, colData = colData,   design = models[[length(models)]])
-  dds.full = DESeq(dds, full=models[[length(models)]], betaPrior = F, fitType = "parametric", test = "Wald", parallel =T, quiet = T)
+  dds = DESeq2::DESeqDataSetFromMatrix(countData = countData, colData = colData,   design = models[[length(models)]])
+  dds.full = DESeq2::DESeq(dds, full=models[[length(models)]], betaPrior = F, fitType = "parametric", test = "Wald", parallel =T, quiet = T)
 
   deviances = sapply(models[-length(models)], function(m){
-    dds.x = nbinomWaldTest(dds.full, modelMatrix= m, betaPrior = F, quiet = T)
+    dds.x = DESeq2::nbinomWaldTest(dds.full, modelMatrix= m, betaPrior = F, quiet = T)
     return(mcols(dds.x)$deviance)
   })
 
@@ -100,12 +99,9 @@ dryseq=function(countData,group,time,T_=24,sample_name=colnames(countData),batch
   #dds = DESeqDataSetFromMatrix(countData = countData, colData = colData, design = models[[length(models)]])
   #dds.full = DESeq(dds, full=models[[length(models)]], betaPrior = F, fitType = "parametric", test = "Wald")
 
-
   DDS_dev =  foreach (i = 1:length(models)) %dopar% {  #nrow(dds.full)
-
     sel = which(choosen_model==i)
     gene = rownames(dds.full)[sel]
-
 
     if(length(gene)>0){
       M=models[[i]]
@@ -115,7 +111,7 @@ dryseq=function(countData,group,time,T_=24,sample_name=colnames(countData),batch
 
       dev <- lapply(gene_specific_mean_models,function(m){
         dds.m <- dds.full # Copying the full model
-        dds.m <- nbinomWaldTest(dds.m[gene], modelMatrix= as.matrix(m), betaPrior = F) # Re-run wald test
+        dds.m <- DESeq2::nbinomWaldTest(dds.m[gene], modelMatrix= as.matrix(m), betaPrior = F) # Re-run wald test
         #return(list(dds.m,mcols(dds.m)$deviance)) # Returning deviances (-2 * log likelihood) // https://support.bioconductor.org/p/107472/
         return(list(dds.m, mcols(dds.m)$deviance)) # Returning deviances (-2 * log likelihood) // https://support.bioconductor.org/p/107472/
 
@@ -171,7 +167,7 @@ dryseq=function(countData,group,time,T_=24,sample_name=colnames(countData),batch
     cm_r = choosen_model[i]
     cm_m = choosen_model_mean[i]
     dds= DDS_dev[[cm_r]][[cm_m]][[1]]
-    out = compute_param(dds, gene ,T_,N)
+    out = compute_param(dds, gene ,period,N)
     return(data.frame(row.names= gene, t(matrix(out)))           )
   }
 

@@ -4,8 +4,10 @@ Title: Differential Rhythmicity analysis of count data
 Version: 0.1.0
 Author: Cedric Gobet and Benjamin Weger
 Maintainer: The package maintainer <Cedric.Gobet@epfl.cht>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Description: DryR ( Differential RhythmicitY analysis in R) is a bayesian statistical
+     framework based on model selection that is designed to detect and estimate changes 
+     in rhythmic parameters (amplitude and phase) and mean expression in a variable 
+     number of conditions.
 Imports:
     DESeq2,
     combinat,

@@ -15,12 +15,23 @@ dryseq(
 )
 }
 \arguments{
-\item{love}{Do you love cats? Defaults to TRUE.}
+\item{countData}{matrix containing non-negative integers; each column represents a sample, each row represents a gene/transcript.}
+
+\item{group}{vector containing the name of each sample.}
+
+\item{time}{vector containing numeric values of the time for each sample.}
+
+\item{T_}{numeric value to indicate period length of the oscillation.}
+
+\item{batch}{vector containing potential batch effects between samples.}
+
+\item{nthreads}{vector numeric value to indicate the threads for parallel computing .}
 }
 \description{
 This function allows you to express your love of cats.
 }
 \examples{
-cat_function()
+load("simulatedData.RData")
+countData = simData$abundData
+dryseq_function()
 }
-\keyword{cats}

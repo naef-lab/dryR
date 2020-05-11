@@ -1,12 +1,25 @@
 #' A Cat Function
 #'
 #' This function allows you to express your love of cats.
-#' @param love Do you love cats? Defaults to TRUE.
-#' @keywords cats
+#' @param countData	matrix containing non-negative integers; each column represents a sample, each row represents a gene/transcript.
+#' @param group	vector containing the name of each sample.
+#' @param time	vector containing numeric values of the time for each sample.
+#' @param countData	matrix containing non-negative integers; each column represents a sample, each row represents a gene/transcript.
+#' @param T_	numeric value to indicate period length of the oscillation.
+#' @param batch	vector containing potential batch effects between samples.
+#' @param nthreads	vector numeric value to indicate the threads for parallel computing .
 #' @export
-#' @examples
-#' cat_function()
+#' @examples load("simulatedData.RData")
+#' @examples countData = simData$abundData
+#' dryseq_function()
 dryseq=function(countData,group,time,T_=24,sample_name=colnames(countData),batch=rep("A",length(sample_name)),n.cores=round(detectCores()*.6,0) ){
+  require('DESeq2')
+  require("combinat")
+  require("parallel")
+  require("gplots")
+  library("RColorBrewer")
+  library("doMC")
+  library("circular")
 
   register(MulticoreParam(n.cores))
   registerDoMC(cores=n.cores)

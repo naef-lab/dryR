@@ -36,7 +36,8 @@ until finished
 
 End with an example of getting some data out of the system or using it for a little demo
 
-## Running the tests
+## Running an example
+```
 require("dryR")
 
 # prepare arguments
@@ -53,5 +54,5 @@ dryList[["parameters"]] # coefficients: phase, amplitude and mean for each group
 dryList[["ncounts"]]    # normalized counts
 dryList[["counts"]]# raw counts
 dryList[["cook"]]  # cook's distance
-
+```
 

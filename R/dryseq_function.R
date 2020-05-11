@@ -1,6 +1,6 @@
 #' Differential rhythmicity analysis for RNA-Seq datasets
 #'
-#' This function performs a rhythmicity analysis based on generalized linear models with a subsequent models selection. The function accepts raw count data from a temporal RNA-Seq dataset of two or more groups. Parameters mean, phase and amplitude are given for each group.
+#' This function performs a rhythmicity analysis based on generalized linear models with a subsequent models selection. The function accepts raw count data from a temporal RNA-Seq dataset of two or more groups. The function outputs parameters mean, phase and amplitude are for each group.
 #' @param countData	matrix containing non-negative integers; each column represents a sample, each row represents a gene/transcript.
 #' @param group	vector containing the name of each sample.
 #' @param time	vector containing numeric values of the time for each sample.

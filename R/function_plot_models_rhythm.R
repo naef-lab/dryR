@@ -5,7 +5,7 @@
 #' @param file_path_name folder to store output
 #' @export pdf that summarize the results of dryseq
 #' @examples
-#' XYZ
+#' XYZn
 plot_models_rhythm = function(DF,file_path_name,time,group, period=24){
 
   x=DF

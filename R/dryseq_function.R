@@ -1,6 +1,6 @@
 #' Differential rhythmicity analysis for RNA-Seq datasets
 #'
-#' This function accepts raw count data from a temporal RNA-Seq dataset of 2 or more groups. Parameters mean, phase and amplitude are given for each group.
+#' This function performs a rhythmicity analsysis based on generalized linear models with a subsequent models selection. The function accepts raw count data from a temporal RNA-Seq dataset of two or more groups. Parameters mean, phase and amplitude are given for each group.
 #' @param countData	matrix containing non-negative integers; each column represents a sample, each row represents a gene/transcript.
 #' @param group	vector containing the name of each sample.
 #' @param time	vector containing numeric values of the time for each sample.
@@ -20,6 +20,7 @@
 #' head(dryList[["counts"]])     # raw counts
 #' head(dryList[["cook"]])       # cook's distance
 #' @details test test test
+#' @references xxxxx
 dryseq=function(countData,group,time,period=24,sample_name=colnames(countData),batch=rep("A",length(sample_name)),n.cores=round(detectCores()*.6,0) ){
   require('DESeq2')
   require("combinat")

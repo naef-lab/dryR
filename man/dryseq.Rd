@@ -49,3 +49,6 @@ head(dryList[["ncounts"]])    # normalized counts
 head(dryList[["counts"]])     # raw counts
 head(dryList[["cook"]])       # cook's distance
 }
+\references{
+xxxxx
+}

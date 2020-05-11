@@ -29,8 +29,14 @@ dryseq(
 
 \item{nthreads}{vector numeric value to indicate the threads for parallel computing .}
 }
+\value{
+a list that contains the following data.frames: results (summary of results), parameters (rhythmic parameters), ncounts (normalized counts), counts (raw counts), cook (cook's distance)
+}
 \description{
 This function accepts raw count data from a temporal RNA-Seq dataset of 2 or more groups. Parameters mean, phase and amplitude are given for each group.
+}
+\details{
+test test test
 }
 \examples{
 countData = simData$abundData

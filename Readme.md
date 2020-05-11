@@ -8,10 +8,10 @@ These instructions will get you a copy of the project up and running on your loc
 ### Prerequisites
 `dryR` accepts count data typically produced by RNA-Seq with a time dimension and several conditions/groups. The input count data should contain only integer values and be organized in a matrix with rows indicating a specific gene and the column refering to a sample. 
 
-The generation . More details can be found here:
+The pipelines to produce these count data from RNA-Seq data (FASTQ files) are described in more details here:
 http://master.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html
 
-A user-friendly way to retrieve a count table from fastq files is provided here: https://amp.pharm.mssm.edu/biojupies/
+A user-friendly web application to generate a count table from FASTQ files is provided here: https://amp.pharm.mssm.edu/biojupies/
 
 ### Installing
 
@@ -22,7 +22,7 @@ devtools::install_github("benjaminweger/dryR")
 ```
 
 ## example dataset 
-`dryR` comes with example data in form of a list called simData. The list contains raw count data simData[["countData"]], a vector with the different conditions/groups simData[["group"]], and a vector indicating Zeitgeber Time simData[["time"]]. The data has been generate using simphony https://github.com/hugheylab/simphony.
+`dryR` comes with example data in form of a list called simData. The list contains count data simData[["countData"]], a vector with the different conditions/groups simData[["group"]], and a vector indicating Zeitgeber Time simData[["time"]]. The data has been generate using simphony https://github.com/hugheylab/simphony.
 
 ## Running an example
 ```

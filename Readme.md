@@ -6,7 +6,7 @@
 These instructions will get you a `dryR` running on your machine. 
 
 ### Prerequisites
-You need to install R https://www.r-project.org/. 
+You need to install R (see https://www.r-project.org/). 
 
 `dryR` accepts count data typically produced by RNA-Seq with a time dimension and several conditions/groups. The input count data should contain only integer values and be organized in a matrix with rows indicating a specific gene and the column refering to a sample. 
 

@@ -7,15 +7,10 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+R 
 
-```
-Give examples
-```
-
-R
-
-Raw count table from fastq files and how to get it. 
+dryR accepts a raw count dataset . Each row 
+To get such a file you might want to use to map. or use https://amp.pharm.mssm.edu/biojupies/
 
 ### Installing
 
@@ -24,6 +19,10 @@ To install dryR run the following code in R.
 install.packages("devtools")
 devtools::install_github("benjaminweger/dryR")
 ```
+
+## example dataset 
+`dryR` comes with example data in form of a list called simData. The list contains raw count data simData[["countData"]], a vector with the different conditions/groups simData[["group"]], and a vector indicating Zeitgber Time simData[["time"]]. The data has been generate using simphony https://github.com/hugheylab/simphony.
+
 
 ## Running an example
 ```

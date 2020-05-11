@@ -1,17 +1,23 @@
-#' A Cat Function
+#' Differential rhythmicity analysis for RNA-Seq datasets
 #'
-#' This function allows you to express your love of cats.
+#' This function accepts raw count data from a temporal of 2 or more groups and . PArameters mean, phase and amplitude are given for each group.
 #' @param countData	matrix containing non-negative integers; each column represents a sample, each row represents a gene/transcript.
 #' @param group	vector containing the name of each sample.
 #' @param time	vector containing numeric values of the time for each sample.
 #' @param countData	matrix containing non-negative integers; each column represents a sample, each row represents a gene/transcript.
 #' @param T_	numeric value to indicate period length of the oscillation.
 #' @param batch	vector containing potential batch effects between samples.
-#' @param nthreads	vector numeric value to indicate the threads for parallel computing .
-#' @export
+#' @param nthreads vector numeric value to indicate the threads for parallel computing .
+#' @export a list that contains the following data.frames: results (summary of results), etc. pp..
 #' @examples load("simulatedData.RData")
-#' @examples countData = simData$abundData
-#' dryseq_function()
+#' countData = simData$abundData
+#' rownames(countData) = paste("feature",1:nrow(countData),sep="_")
+#' group = simData$sampleMetadata$cond
+#' time  = simData$sampleMetadata$time
+#' dryList = dryseq(countData,group,time)
+#' head(dryList[["results"]])
+#' head(dryList[["parameters"]])
+#'
 dryseq=function(countData,group,time,T_=24,sample_name=colnames(countData),batch=rep("A",length(sample_name)),n.cores=round(detectCores()*.6,0) ){
   require('DESeq2')
   require("combinat")

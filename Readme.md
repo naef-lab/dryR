@@ -1,5 +1,5 @@
 # dryR
-`dryR` is an R package that provides the statistical framework to assess differential rhythmicity of temporal RNA-Seq datasets of two and more conditions.
+`dryR` is an R package that provides the statistical framework to assess differential rhythmicity of a time series of RNA-Seq data of two and more conditions.
 
 ## Getting Started
 

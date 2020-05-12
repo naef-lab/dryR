@@ -15,5 +15,5 @@ plot_models_rhythm(DF, file_path_name, time, group, period = 24)
 This function allows to plot the results of dryseq.
 }
 \examples{
-XYZ
+XYZn
 }

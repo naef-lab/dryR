@@ -21,13 +21,13 @@ dryseq(
 
 \item{time}{vector containing numeric values of the time for each sample.}
 
-\item{period}{numeric value to indicate period length of the oscillation. Default for circadian data 24 h.}
+\item{period}{numeric value to indicate period length of the oscillation. Default: circadian data period of 24 h.}
 
-\item{sample_name}{vector containing sample names.}
+\item{sample_name}{vector containing sample names. Default: colnames are sample names.}
 
-\item{batch}{vector containing potential batch effects between samples.}
+\item{batch}{vector containing potential batch effects between samples. Default: no batch effect.}
 
-\item{nthreads}{vector numeric value to indicate the threads for parallel computing .}
+\item{nthreads}{vector numeric value to indicate the threads for parallel computing .Default: 60 \% of detected cores.}
 }
 \value{
 a list that contains the following data.frames: results (summary of results), parameters (rhythmic parameters), ncounts (normalized counts), counts (raw counts), cook (cook's distance)

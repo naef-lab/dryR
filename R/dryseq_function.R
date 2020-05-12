@@ -5,10 +5,10 @@
 #' @param group	vector containing the name of each sample.
 #' @param time	vector containing numeric values of the time for each sample.
 #' @param countData	matrix containing non-negative integers; each column represents a sample, each row represents a gene/transcript.
-#' @param period	numeric value to indicate period length of the oscillation. Default for circadian data 24 h.
-#' @param sample_name	vector containing sample names.
-#' @param batch	vector containing potential batch effects between samples.
-#' @param nthreads vector numeric value to indicate the threads for parallel computing .
+#' @param period	numeric value to indicate period length of the oscillation. Default: circadian data period of 24 h.
+#' @param sample_name	vector containing sample names. Default: colnames are sample names.
+#' @param batch	vector containing potential batch effects between samples. Default: no batch effect.
+#' @param nthreads vector numeric value to indicate the threads for parallel computing .Default: 60 \% of detected cores.
 #' @return a list that contains the following data.frames: results (summary of results), parameters (rhythmic parameters), ncounts (normalized counts), counts (raw counts), cook (cook's distance)
 #' @examples countData = simData[["countData"]]
 #' group = simData[["group"]]

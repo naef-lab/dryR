@@ -22,11 +22,11 @@ To install `dryR` run the following code in R.
 install.packages("devtools")
 devtools::install_github("benjaminweger/dryR")
 ```
-
-## example dataset 
+## Example
+### example dataset 
 `dryR` comes with example data in form of a list called simData. The list contains count data simData[["countData"]], a vector with the different conditions/groups simData[["group"]], and a vector indicating Zeitgeber Time simData[["time"]]. The data has been generate using simphony https://github.com/hugheylab/simphony.
 
-## Running an example
+### Running an example
 ```
 require("dryR")
 
@@ -47,4 +47,4 @@ dryList[["cook"]]       # cook's distance for outlier detection
 ```
 
 ## Help
-A documentation using `?dryseq` is available. 
+A documentation using `?dryseq` function is available. 

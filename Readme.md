@@ -22,7 +22,7 @@ To install `dryR` run the following code in R.
 install.packages("devtools")
 devtools::install_github("benjaminweger/dryR")
 ```
-## Example
+## Quick start
 ### Example dataset 
 `dryR` comes with example data in form of a list called simData. The list contains count data simData[["countData"]], a vector with the different conditions/groups simData[["group"]], and a vector indicating Zeitgeber Time simData[["time"]]. The data has been generate using simphony https://github.com/hugheylab/simphony.
 

@@ -24,7 +24,7 @@ devtools::install_github("benjaminweger/dryR")
 ```
 ## Quick start
 ### Example dataset 
-`dryR` comes with example data in form of a list called simData. The list contains count data simData[["countData"]], a vector with the different conditions/groups simData[["group"]], and a vector indicating Zeitgeber Time simData[["time"]]. The data have been generated using simphony https://github.com/hugheylab/simphony.
+`dryR` comes with example data in form of a list called simData. The list contains count data simData[["countData"]], a vector with the different conditions/groups simData[["group"]], and a vector indicating Zeitgeber Time simData[["time"]]. The data was generated using simphony https://github.com/hugheylab/simphony.
 
 ### Running an example
 ```

@@ -48,11 +48,10 @@
 #' @references Love, M.I., Huber, W., Anders, S. (2014) Moderated estimation of fold change and dispersion for RNA-seq data with DESeq2. Genome Biology
 #' @references Anders, S. and Huber, W. (2014) Moderated estimation of fold change and dispersion for RNA-seq data with DESeq2. Genome Biology
 dryseq=function(countData,group,time,period=24,sample_name=colnames(countData),batch=rep("A",length(sample_name)),n.cores=round(detectCores()*.6,0) ){
-  require('DESeq2')
+  require("DESeq2")
   require("combinat")
   require("parallel")
   require("gplots")
-  library("RColorBrewer")
   library("doMC")
   library("circular")
 
@@ -106,7 +105,6 @@ dryseq=function(countData,group,time,period=24,sample_name=colnames(countData),b
   BIC = as.data.frame(sapply(1:ncol(deviances), function(i) { deviances[,i] + log(ncol(countData)) * ncol(models[[i]] )}   ))
 
   #calculate the BICW
-  # I think that the Zaehler is actually 1 because the difference between the model j (=choosen model) and the minimum model is 0
   BICW               = t(apply(BIC,1,compute_BICW))
   choosen_model      = apply(BIC,1,which.min)
   choosen_model_BICW = apply(BICW,1,max)
@@ -147,8 +145,6 @@ dryseq=function(countData,group,time,period=24,sample_name=colnames(countData),b
     }
 
     if(length(gene)==0){dev = list (NA, NA)}
-
-
 
     return(dev)
   }
@@ -208,7 +204,6 @@ dryseq=function(countData,group,time,period=24,sample_name=colnames(countData),b
   ncounts_RF       = counts(dds.full, normalized = TRUE)
 
   # generate a table summarizing the analysis
-
   complete_parametes = cbind(parameters,choosen_model,choosen_model_BICW, choosen_model_mean, choosen_model_mean_BICW)
   global_table = merge(ncounts_RF,complete_parametes, by="row.names")
   rownames(global_table) = global_table$Row.names

@@ -39,7 +39,7 @@ plot_models_rhythm = function(DF,file_path_name,time,group, period=24){
 
       ss=split(1:length(com),com)
 
-      x_s.m=sapply(ss,function(x) rowMeans(x_s[,x]))
+      x_s.m=sapply(ss,function(x) if(length(x) > 1){rowMeans(x_s[,x])}else{x_s[,x]})
 
       #remove mean per condition
       condi=sapply(strsplit(colnames(x_s.m)," "),"[[",2)

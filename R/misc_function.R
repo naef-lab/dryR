@@ -44,7 +44,55 @@ compute_BICW = function(x){
   test = exp(-0.5*(x-BIC_min))/sum(exp(-0.5*(x-BIC_min)))
   return(test)
 }
-#####################################
+#################################3
+compute_RSS = function(x, matX){
+  
+  xx = solve(t(matX)%*%matX)
+  y = xx %*% t(matX) %*% as.numeric(x)
+  y = as.matrix(y)
+  rownames(y)  = colnames(matX)
+  RSS = t(x) %*% x -t(x) %*% matX %*% xx %*% t(matX) %*% x
+  list(param=y,RSS = RSS)
+}
+
+#############################################
+compute_BIC = function(A,n){
+  
+  p = length(A$param)
+  #AIC = n * log(A$RSS/n, base = exp(1)) + 2* p + 2*p*(p +1) /(n-p-1)
+  BIC=  n * log(A$RSS/n, base = exp(1))  + log(n, base = exp(1)) * p
+  list(BIC = BIC, param = A$param)
+  
+} 
+
+##############################
+do_all_lm = function(x,my_mat){
+  x = as.numeric(x)
+  n = length(x)
+  
+  my_fit = lapply(my_mat,compute_RSS, x = x)
+  my_BIC =lapply(my_fit,compute_BIC,n=n)
+  my_BIC
+}
+
+##########################
+
+do_all_lm_mr = function(x,countData,my_mat_r, my_mat_m, choosen_model){
+  i=match(x,rownames(countData))
+  x=countData[x,]
+  M=my_mat_r[[choosen_model[i]]]
+  #build the gene specific model from the rhythmic point of view
+  gene_specific_mean_models = lapply(my_mat_m,
+                                     function(x) cbind(x,M[,-grep("u",colnames(M))]))
+  x = as.numeric(x)
+  n = length(x)
+  
+  my_fit = lapply(gene_specific_mean_models,compute_RSS, x = x)
+  my_BIC =lapply(my_fit,compute_BIC,n=n)
+  my_BIC
+}
+
+####################################
 compute_param = function(dds, gene, period=T_,N){
 
   dds = dds[gene,]
@@ -76,6 +124,39 @@ compute_param = function(dds, gene, period=T_,N){
   #names(paramout) = c(paste(c('mean','a','b','amp','relamp','phase'),rep(1:N,each =6), sep = "_"))
   paramout
 }
+####################################
+compute_param_l = function(dds, period=T_, N){
+  
+ 
+  param = c(paste(rep(c('u','a','b'),each=N),rep(1:N,3), sep = "."))
+  
+  paramout = rep(NA,N*6)
+  
+  for(i in 1:N){
+    
+    u=dds[grep(paste(param[i],"Intercept",sep="|"), rownames(dds)),1]
+    a=dds[grep(param[i+N], rownames(dds)),1]
+    b=dds[grep(param[i+N*2], rownames(dds)),1]
+    
+    if(length(u) ==0) u=NA
+    if(length(a) ==0) a=NA
+    if(length(b) ==0) b=NA
+    
+    phase=period/(2*pi)*atan2(b,a)
+    amp =2*sqrt(a^2+b^2)
+    relamp=0.5*amp/u
+    if(!is.na(phase)){
+      #if(phase<0) phase=phase+period
+      #if(phase>period) phase=phase-period
+      phase=phase%%period
+    }
+    paramout[(1:6 + 6*(i-1))] = c(u,a,b,amp,relamp,phase)
+  }
+  
+  #names(paramout) = c(paste(c('mean','a','b','amp','relamp','phase'),rep(1:N,each =6), sep = "_"))
+  paramout
+}
+
 #####################################
 create_matrix_list = function(t,co,period){
   my_matrix = list()

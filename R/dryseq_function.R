@@ -4,7 +4,6 @@
 #' @param countData	matrix containing non-negative integers; each column represents a sample, each row represents a gene/transcript.
 #' @param group	vector containing the name of each sample.
 #' @param time	vector containing numeric values of the time for each sample.
-#' @param countData	matrix containing non-negative integers; each column represents a sample, each row represents a gene/transcript.
 #' @param period	numeric value to indicate period length of the oscillation. Default: circadian data period of 24 h.
 #' @param sample_name	vector containing sample names. Default: colnames are sample names.
 #' @param batch	vector containing potential batch effects between samples. Default: no batch effect.
@@ -54,6 +53,7 @@ dryseq=function(countData,group,time,period=24,sample_name=colnames(countData),b
   require("gplots")
   library("doMC")
   library("circular")
+  library("RColorBrewer")
 
   register(MulticoreParam(n.cores))
   registerDoMC(cores=n.cores)
@@ -219,7 +219,7 @@ dryseq=function(countData,group,time,period=24,sample_name=colnames(countData),b
   out[["vsd"]]         = vsd
   out[["ncounts"]]     = ncounts_RF
   out[["counts"]]      = counts_RF
-  out[["parameters"]]  = complete_parametes
+  out[["parameters"]]  = complete_parameters
   out[["cook"]]        = assays(dds.full)[["cooks"]]
   out[["dds.full"]]    = dds.full
 

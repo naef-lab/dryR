@@ -204,7 +204,7 @@ dryseq=function(countData,group,time,period=24,sample_name=colnames(countData),b
   ncounts_RF       = counts(dds.full, normalized = TRUE)
 
   # generate a table summarizing the analysis
-  complete_parametes = cbind(parameters,choosen_model,choosen_model_BICW, choosen_model_mean, choosen_model_mean_BICW)
+  complete_parameters = cbind(parameters,choosen_model,choosen_model_BICW, choosen_model_mean, choosen_model_mean_BICW)
   global_table = merge(ncounts_RF,complete_parametes, by="row.names")
   rownames(global_table) = global_table$Row.names
   global_table_df  = global_table[,-grep("Row.names",colnames(global_table))]

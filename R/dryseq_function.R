@@ -153,9 +153,9 @@ dryseq=function(countData,group,time,period=24,sample_name=colnames(countData),b
   for (cm_r in 1:length(models)){
 
     if(!is.na(DDS_dev[[cm_r]][1])){
-      deviance_mean.x  = rbind(sapply(1:15,function(x) {DDS_dev[[cm_r]][[x]][[2]]}))
+      deviance_mean.x            = rbind(sapply(1:length(model_mean_cond),function(x) {DDS_dev[[cm_r]][[x]][[2]]}))
       rownames(deviance_mean.x)  = rownames(DDS_dev[[cm_r]][[1]][[1]])
-      deviance_mean    = rbind(deviance_mean, deviance_mean.x)}
+      deviance_mean              = rbind(deviance_mean, deviance_mean.x)}
   }
 
   deviance_mean = deviance_mean[rownames(countData),]

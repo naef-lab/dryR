@@ -44,6 +44,8 @@ dryList[["parameters"]] # coefficients: phase, amplitude and mean for each group
 dryList[["ncounts"]]    # normalized counts
 dryList[["counts"]]     # raw counts
 dryList[["cook"]]       # cook's distance for outlier detection
+
+plot_fit(dryList, "feature_113")
 ```
 
 ## Help

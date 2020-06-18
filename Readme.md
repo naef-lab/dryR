@@ -45,7 +45,7 @@ dryList[["ncounts"]]    # normalized counts
 dryList[["counts"]]     # raw counts
 dryList[["cook"]]       # cook's distance for outlier detection
 
-plot_fit(dryList, "feature_113")
+dry_plot(dryList, "feature_113")
 ```
 
 ## Help

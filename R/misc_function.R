@@ -46,7 +46,7 @@ compute_BICW = function(x){
 }
 #################################3
 compute_RSS = function(x, matX){
-  
+
   xx = solve(t(matX)%*%matX)
   y = xx %*% t(matX) %*% as.numeric(x)
   y = as.matrix(y)
@@ -57,19 +57,19 @@ compute_RSS = function(x, matX){
 
 #############################################
 compute_BIC = function(A,n){
-  
+
   p = length(A$param)
   #AIC = n * log(A$RSS/n, base = exp(1)) + 2* p + 2*p*(p +1) /(n-p-1)
   BIC=  n * log(A$RSS/n, base = exp(1))  + log(n, base = exp(1)) * p
   list(BIC = BIC, param = A$param)
-  
-} 
+
+}
 
 ##############################
 do_all_lm = function(x,my_mat){
   x = as.numeric(x)
   n = length(x)
-  
+
   my_fit = lapply(my_mat,compute_RSS, x = x)
   my_BIC =lapply(my_fit,compute_BIC,n=n)
   my_BIC
@@ -86,7 +86,7 @@ do_all_lm_mr = function(x,countData,my_mat_r, my_mat_m, choosen_model){
                                      function(x) cbind(x,M[,-grep("u",colnames(M))]))
   x = as.numeric(x)
   n = length(x)
-  
+
   my_fit = lapply(gene_specific_mean_models,compute_RSS, x = x)
   my_BIC =lapply(my_fit,compute_BIC,n=n)
   my_BIC
@@ -126,22 +126,22 @@ compute_param = function(dds, gene, period=T_,N){
 }
 ####################################
 compute_param_l = function(dds, period=T_, N){
-  
- 
+
+
   param = c(paste(rep(c('u','a','b'),each=N),rep(1:N,3), sep = "."))
-  
+
   paramout = rep(NA,N*6)
-  
+
   for(i in 1:N){
-    
+
     u=dds[grep(paste(param[i],"Intercept",sep="|"), rownames(dds)),1]
     a=dds[grep(param[i+N], rownames(dds)),1]
     b=dds[grep(param[i+N*2], rownames(dds)),1]
-    
+
     if(length(u) ==0) u=NA
     if(length(a) ==0) a=NA
     if(length(b) ==0) b=NA
-    
+
     phase=period/(2*pi)*atan2(b,a)
     amp =2*sqrt(a^2+b^2)
     relamp=0.5*amp/u
@@ -152,7 +152,7 @@ compute_param_l = function(dds, period=T_, N){
     }
     paramout[(1:6 + 6*(i-1))] = c(u,a,b,amp,relamp,phase)
   }
-  
+
   #names(paramout) = c(paste(c('mean','a','b','amp','relamp','phase'),rep(1:N,each =6), sep = "_"))
   paramout
 }
@@ -322,3 +322,77 @@ annotate_matrix = function(m,group){
   }
   m
 }
+
+#####################################
+plot_fit = function (dryList, gene)
+{
+  vsd        = log2(dryList[["ncounts"]]+1)
+  parameters = dryList[["parameters"]][,grep("^mean|^a_|^b_|^amp|^phase|^relamp",colnames(dryList[["parameters"]]))]
+
+  require("reshape2")
+  require("stringr")
+  require("ggplot2")
+  require("Rmisc")
+  require("limma")
+
+  ID = rownames(dryList[["results"]] )[grep(gene,rownames(dryList[["results"]] ))]
+  print(ID)
+
+  d = vsd[grep(ID,rownames(vsd)),]
+  d = melt(d)
+
+  d$group            = dryList[["group"]]
+
+  d$time            = as.numeric(dryList[["time"]])
+  d$time            = d$time%%24
+
+
+  library(Rmisc)
+  d <- summarySE(d, measurevar="value", groupvars=c("time","group"))
+
+  # generate dataframe m with the fit data
+  v = seq(0,24,1)
+  fit_d_0 = parameters[which(rownames(parameters)==ID),grep("mean",colnames(parameters))] # intercept
+  fit_d_1 = parameters[which(rownames(parameters)==ID),grep("a_",colnames(parameters))] # coefficient a
+  fit_d_2 = parameters[which(rownames(parameters)==ID),grep("^b_",colnames(parameters))] # coefficient b
+
+  m = data.frame(v)
+
+  dd = data.frame(v)
+  dd$v = v
+
+  fit_values = function (x,n)
+  { as.numeric((fit_d_0[n] + fit_d_1[n]*cos(2*pi*x/24)  + fit_d_2[n]*sin(2*pi*x/24)))  }
+
+
+  for (u in 1:length(unique(d$group))){
+    m[,u+1]  = NA
+    m[,u+1]  = apply(dd,1, fit_values,u)
+  }
+
+  m = m[,-1]
+
+  colnames(m) =  unique(dryList[["group"]])
+
+  m =  melt(m)
+  m$time = rep(v,2)
+
+  colnames(m)       = c("group","value","time")
+
+  m$value[which(m$value<0)] = 0
+
+  gg1 = ggplot(d, aes(x=time, y=value, group=group, color=group)) +
+    geom_errorbar(aes(ymin=value-se, ymax=value+se), width=.4) +
+    geom_point(size=2, shape=19) +
+    xlab("Zeitgeber Time (h)") +
+    ylab("Log Norm. read counts") +
+    ggtitle(substr(ID,20,99)) +
+    scale_x_continuous(breaks=c(0,6,12,18,24,30)) +
+    theme_bw(base_size = 10) +
+    theme(aspect.ratio = 1, panel.grid.minor=element_blank(), legend.position = "right") +
+    geom_line(aes(x=time, y=(value), group=group), data = m, position=position_dodge(width=0.5)) +
+    facet_wrap(~group)
+
+  print(gg1)
+}
+

@@ -324,7 +324,7 @@ annotate_matrix = function(m,group){
 }
 
 #####################################
-plot_fit = function (dryList, gene)
+dry_plot = function (dryList, gene)
 {
   vsd        = log2(dryList[["ncounts"]]+1)
   parameters = dryList[["parameters"]][,grep("^mean|^a_|^b_|^amp|^phase|^relamp",colnames(dryList[["parameters"]]))]

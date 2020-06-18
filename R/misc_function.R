@@ -356,6 +356,10 @@ dry_plot = function (dryList, gene)
   fit_d_1 = parameters[which(rownames(parameters)==ID),grep("a_",colnames(parameters))] # coefficient a
   fit_d_2 = parameters[which(rownames(parameters)==ID),grep("^b_",colnames(parameters))] # coefficient b
 
+  fit_d_0[is.na(fit_d_0)] = 0
+  fit_d_1[is.na(fit_d_1)] = 0
+  fit_d_2[is.na(fit_d_2)] = 0
+
   m = data.frame(v)
 
   dd = data.frame(v)

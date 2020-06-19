@@ -155,6 +155,8 @@ dryseq_lm=function(countData,group,time,period=24,sample_name=colnames(countData
 
   out = list()
 
+  out[["time"]]        = time
+  out[["group"]]       = group
   out[["results"]]     = global_table_df
   out[["BICW_rhythm"]] = BICW
   out[["BICW_mean"]]   = BICW_mean

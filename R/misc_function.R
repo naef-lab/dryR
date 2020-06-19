@@ -332,7 +332,10 @@ dry_plot = function (dryList, gene)
   require("Rmisc")
   #require("limma")
 
-  vsd        = log2(dryList[["ncounts"]]+1)
+
+  if("ncounts" %in% names(dryList)){vsd        = log2(dryList[["ncounts"]]+1)}
+  if("values" %in% names(dryList)){vsd         = dryList[["values"]]}
+
   parameters = dryList[["parameters"]][,grep("^mean|^a_|^b_|^amp|^phase|^relamp",colnames(dryList[["parameters"]]))]
 
 
@@ -392,7 +395,7 @@ dry_plot = function (dryList, gene)
     geom_point(size=2, shape=19) +
     xlab("Zeitgeber Time (h)") +
     ylab("Log Norm. read counts") +
-    ggtitle(substr(ID,20,99)) +
+    ggtitle(ID) +
     scale_x_continuous(breaks=c(0,6,12,18,24,30)) +
     theme_bw(base_size = 10) +
     theme(aspect.ratio = 1, panel.grid.minor=element_blank(), legend.position = "right") +

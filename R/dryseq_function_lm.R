@@ -140,7 +140,7 @@ dryseq_lm=function(countData,group,time,period=24,sample_name=colnames(countData
   }
   parameters            = data.frame(t(do.call(cbind, parameters)))
   colnames(parameters)  = c(paste(c('mean','a','b','amp','relamp','phase'),rep(unique(group),each =6), sep = "_"))
-  rownames(parameters) = rownames(countData)
+  rownames(parameters)  = rownames(countData)
 
 
   #normalized counts
@@ -150,13 +150,15 @@ dryseq_lm=function(countData,group,time,period=24,sample_name=colnames(countData
   complete_parameters = cbind(parameters,choosen_model,choosen_model_BICW, choosen_model_mean, choosen_model_mean_BICW)
   global_table_df = merge(ncounts_RF,complete_parameters, by="row.names")
 
+  rownames(global_table_df) = global_table_df[,1]
+  global_table_df           = global_table_df[,-1]
 
   out = list()
 
   out[["results"]]     = global_table_df
   out[["BICW_rhythm"]] = BICW
   out[["BICW_mean"]]   = BICW_mean
-  out[["ncounts"]]     = ncounts_RF
+  out[["values"]]      = ncounts_RF
   out[["parameters"]]  = complete_parameters
 
   message("finished!")

@@ -326,14 +326,16 @@ annotate_matrix = function(m,group){
 #####################################
 dry_plot = function (dryList, gene)
 {
+  require("reshape2")
+  #require("stringr")
+  require("ggplot2")
+  require("Rmisc")
+  #require("limma")
+
   vsd        = log2(dryList[["ncounts"]]+1)
   parameters = dryList[["parameters"]][,grep("^mean|^a_|^b_|^amp|^phase|^relamp",colnames(dryList[["parameters"]]))]
 
-  require("reshape2")
-  require("stringr")
-  require("ggplot2")
-  require("Rmisc")
-  require("limma")
+
 
   ID = rownames(dryList[["results"]] )[grep(gene,rownames(dryList[["results"]] ))]
   print(ID)

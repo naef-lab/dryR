@@ -55,6 +55,11 @@ dryseq=function(countData,group,time,period=24,sample_name=colnames(countData),b
   library("circular")
   library("RColorBrewer")
 
+  sel       = order(group,time)
+  time      = time[sel]
+  group     = group[sel]
+  countData = countData[,sel]
+
   register(MulticoreParam(n.cores))
   registerDoMC(cores=n.cores)
 

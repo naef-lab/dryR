@@ -39,34 +39,39 @@ dryseq_lm=function(countData,group,time,period=24,sample_name=colnames(countData
   library("doMC")
   library("circular")
   library("RColorBrewer")
-  
-  
+
+  sel       = order(group,time)
+  time      = time[sel]
+  group     = group[sel]
+  countData = countData[,sel]
+
+
   register(MulticoreParam(n.cores))
   registerDoMC(cores=n.cores)
-  
+
   #countData = countData[rowSums(countData)!=0,]
-  
+
   s1 <- sin(2*pi*time/period)
   c1 <- cos(2*pi*time/period)
-  
+
   conds  = cbind(group,s1,c1,batch)
   colnames(conds) = c("group","s1","c1","batch")
-  
+
   colData <- data.frame(row.names=colnames(countData), conds)
   N=length(unique(group))
-  
+
   ############################
   # FIT RHYTHMS
-  
+
   message("fitting rhythmic models")
-  
+
   models = create_matrix_list(time,N,period)
   #Reorder u, a, b
   models = lapply(models, function(l) l[,c(grep("u",colnames(l)),grep("a|b",colnames(l)))])
-  
+
   for (i in 1:length(models)){
     rownames(models[[i]]) = rownames(colData)}
-  
+
   if (length(unique(batch))>1) {
     # add the batch effect
     model_b = as.matrix(model.matrix(~  batch),contrasts.arg=NULL)[,2:length(unique(batch)),drop=F]
@@ -74,61 +79,61 @@ dryseq_lm=function(countData,group,time,period=24,sample_name=colnames(countData
     models = lapply(models, function(l) cbind(model_b,l))
     models = lapply(models, function(l) l[,c(grep("u",colnames(l)),grep("BATCH",colnames(l)),grep("a|b",colnames(l)))]   )
   }
-  
+
   fit = parallel::mclapply(split(countData, rownames(countData)),
-                           do_all_lm, 
+                           do_all_lm,
                            my_mat= models,
                            mc.cores=n.cores)
-  
+
   # calculate the BIC
   BIC = unlist(fit)[grep('BIC$',names(unlist(fit)))]
   BIC= matrix(BIC,nrow=nrow(countData),byrow=T)
-  
+
   #calculate the BICW
   BICW               = t(apply(BIC,1,compute_BICW))
   choosen_model      = apply(BIC,1,which.min)
   choosen_model_BICW = apply(BICW,1,max)
-  
+
   ############################
   # FIT BASELINE
-  
+
   message("fitting mean models")
-  
+
   model_mean_cond=create_matrix_list_mean(N,group)
   model_mean_cond=lapply(model_mean_cond,annotate_matrix,group)
-  
+
   for (i in 1:length(model_mean_cond)){
     rownames(model_mean_cond[[i]]) = rownames(colData)}
-  
+
   gene.list=as.list(rownames(countData))
   fit = parallel::mclapply(gene.list,
                            FUN=do_all_lm_mr,
                            countData,
                            my_mat_r = models,
                            my_mat_m = model_mean_cond,
-                           choosen_model = choosen_model, 
+                           choosen_model = choosen_model,
                            mc.cores=n.cores)
-  
+
   #extract BIC
   BIC_mean = unlist(fit)[grep('BIC$',names(unlist(fit)))]
   BIC_mean = matrix(BIC_mean,nrow=nrow(countData),byrow=T)
-  
+
   #calculate the BICW
   BICW_mean = t(apply(BIC_mean,1,compute_BICW))
-  
+
   choosen_model_mean = apply(BIC_mean,1,which.min)
   choosen_model_mean_BICW = apply(BICW_mean,1,max)
-  
+
   ################
   # coefficients / mean, amplitude and phase
   ###############
-  
+
   message("extracting rhythmic parameters")
   parameters=NULL
-  
+
   parameters =  foreach (i = 1:nrow(countData)) %dopar% {
     gene = rownames(countData)[i]
-    
+
     dds= fit[[i]][[choosen_model_mean[i]]]$param
     out = compute_param_l(dds,period, N)
     return(out)
@@ -136,18 +141,18 @@ dryseq_lm=function(countData,group,time,period=24,sample_name=colnames(countData
   parameters            = data.frame(t(do.call(cbind, parameters)))
   colnames(parameters)  = c(paste(c('mean','a','b','amp','relamp','phase'),rep(unique(group),each =6), sep = "_"))
   rownames(parameters) = rownames(countData)
-   
+
 
   #normalized counts
   ncounts_RF = countData
-  
+
   # generate a table summarizing the analysis
   complete_parameters = cbind(parameters,choosen_model,choosen_model_BICW, choosen_model_mean, choosen_model_mean_BICW)
   global_table_df = merge(ncounts_RF,complete_parameters, by="row.names")
- 
-  
+
+
   out = list()
-  
+
   out[["results"]]     = global_table_df
   out[["BICW_rhythm"]] = BICW
   out[["BICW_mean"]]   = BICW_mean
@@ -156,6 +161,6 @@ dryseq_lm=function(countData,group,time,period=24,sample_name=colnames(countData
 
   message("finished!")
   return(out)
-  
+
 
 }

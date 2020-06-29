@@ -31,7 +31,7 @@
 #'      In a second iteration step, dryR set the coefficient α and β to the values of the selected model in the first regression.
 #'      dryseq then defined different models for the mean coefficient with differing or shared means between groups. Each model is solved using generalized linear regression and each gene was assigned to a preferred model based on the BICW as described above for the first iteration.
 
-dryseq_lm=function(countData,group,time,period=24,sample_name=colnames(countData),batch=rep("A",length(sample_name)),n.cores=round(detectCores()*.6,0) ){
+drylm=function(countData,group,time,period=24,sample_name=colnames(countData),batch=rep("A",length(sample_name)),n.cores=round(detectCores()*.6,0) ){
   require("DESeq2")
   require("combinat")
   require("parallel")

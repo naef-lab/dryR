@@ -55,10 +55,14 @@ dryseq=function(countData,group,time,period=24,sample_name=colnames(countData),b
   library("circular")
   library("RColorBrewer")
 
+
+
   sel       = order(group,time)
   time      = time[sel]
   group     = group[sel]
   countData = countData[,sel]
+  batch = batch[sel]
+  sample_name = sample_name[sel]
 
   register(MulticoreParam(n.cores))
   registerDoMC(cores=n.cores)
@@ -79,7 +83,7 @@ dryseq=function(countData,group,time,period=24,sample_name=colnames(countData),b
 
   message("fitting rhythmic models")
 
-  models = create_matrix_list(time,N,period)
+  models = create_matrix_list(time,group, N,period)
   #Reorder u, a, b
   models = lapply(models, function(l) l[,c(grep("u",colnames(l)),grep("a|b",colnames(l)))]   )
 

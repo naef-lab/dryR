@@ -158,50 +158,44 @@ compute_param_l = function(dds, period=T_, N){
 }
 
 #####################################
-create_matrix_list = function(t,co,period){
+create_matrix_list = function(t, conds, n.co, period){
+  require(combinat)
+
   my_matrix = list()
 
-  c=cos(2*pi*t/period)
-  s=sin(2*pi*t/period)
+  c <- cos(2*pi*t/period)
+  s <- sin(2*pi*t/period)
 
-  MAT = cbind(rep(1,length(t)/co),c[1:(length(t)/co)],s[1:(length(t)/co)])
-  GMAT = matrix(NA,ncol=3*co, nrow =length(t))
-  colnames(GMAT) = c(paste(c('u','a','b'),rep(1:co,each =3), sep = "."))
-  for(i in 1:co){
-    border = length(t)/co
-    s = (i-1)*border + 1
-    e = i*border
-    sr = (i-1)*3 + 1
-    er = i*3
-    GMAT[s:e,sr:er] = MAT
+  MAT <- cbind(rep(1,length(t)),c[1:length(t)],s[1:length(t)])
+  GMAT <- matrix(NA,ncol=3*n.co, nrow =length(t))
+  rownames(GMAT) <- conds
+  colnames(GMAT) <- c(paste(c('u','a','b'),rep(1:n.co,each =3), sep = "."))
+
+  it <- 1
+  for(i in unique(rownames(GMAT))){
+    GMAT[rownames(GMAT)==i,grep(paste0('.',it,'$'),colnames(GMAT))] = MAT[rownames(GMAT)==i,]
+    it=it+1
   }
 
-
-  sum_m = 0
-  for(i in 0:co){
-    sum_m = sum_m + comb(co,i)
-  }
-  vn = rep(F,co)
-  for(i in 1:co){
-    g = rep(F,co)
+  vn = rep(F,n.co)
+  for(i in 1:n.co){
+    g = rep(F,n.co)
     g[1:i] = TRUE
-
-    p = unique(permn(g))
-    v = matrix(unlist(p),ncol = co,byrow = TRUE)
+    p = unique(combinat::permn(g))
+    v = matrix(unlist(p),ncol = n.co,byrow = TRUE)
     vn = rbind(vn,v)
 
   }
 
 
-  mp = seq(1,3*co,3)
-  vn = vn[,rep(1:co,each=3)]
-  vn[,seq(1,3*co,3)] = TRUE
-  vn = data.frame(vn)
-  vn[,dim(vn)[2] + 1]=(apply(vn,1,nbt)-co)/2
-  colnames(vn) = c(paste(c('u','a','b'),rep(1:co,each =3), sep = "."),'nb_cycl')
+  vn = vn[,rep(1:n.co,each=3)]
+  vn[,seq(1,3*n.co,3)] = TRUE
+  vn = data.frame(vn,row.names= NULL)
+  vn[,dim(vn)[2] + 1]=(apply(vn,1,nbt)-n.co)/2
+  colnames(vn) = c(paste(c('u','a','b'),rep(1:n.co,each =3), sep = "."),'nb_cycl')
 
   model = 1
-  for(g in 0:co){
+  for(g in 0:n.co){
 
 
     nb_cycl =g
@@ -214,7 +208,7 @@ create_matrix_list = function(t,co,period){
     for(k in pos){
       if(g > 1){
         for(v in 1:nrow(com_l)){
-          gmat = GMAT[,unlist(vn[k,-ncol(vn) ])]
+          gmat = GMAT[,unlist(vn[k,-dim(vn)[2]])]
           ve = as.numeric(com_l[v,])
           id =1
           sa = ve
@@ -228,7 +222,7 @@ create_matrix_list = function(t,co,period){
               he = grep("[ab]",colnames(gmat))
               he = he[poch]
               pp=0
-              for( z in 1:((length(he)-2)/2)){
+              for(z in 1:((length(he)-2)/2)){
                 repl1 = which(gmat[,he[2*z+1]]!='NA')
                 repl2 = which(gmat[,he[2*z+2]]!='NA')
                 gmat[repl1,he[1]] = gmat[repl1,he[2*z+1]]
@@ -255,7 +249,7 @@ create_matrix_list = function(t,co,period){
           model = model + 1
         }
       }else{
-        gmat = GMAT[,unlist(vn[k,-ncol(vn) ])]
+        gmat = GMAT[,unlist(vn[k,-dim(vn)[2]])]
         gmat[is.na(gmat)] =0
         del =which(apply(gmat,2,function(x) length(which(x == 0))) == length(t))
         if(length(del)!=0){
@@ -295,7 +289,7 @@ create_matrix_list_mean = function(N,group){
             key = FALSE)
 
 
-  com_l=com_l[,rep(1:N,times=table(group))]
+  com_l=com_l[,match(group,names(com_l))]
   p=list()
   for(j in 1:nrow(com_l)){
     if(j==1){

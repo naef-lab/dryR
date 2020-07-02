@@ -44,12 +44,9 @@ dryseq_lm=function(countData,group,time,period=24,sample_name=colnames(countData
   time      = time[sel]
   group     = group[sel]
   countData = countData[,sel]
+  batch = batch[sel]
+  sample_name = sample_name[sel]
 
-
-  register(MulticoreParam(n.cores))
-  registerDoMC(cores=n.cores)
-
-  #countData = countData[rowSums(countData)!=0,]
 
   s1 <- sin(2*pi*time/period)
   c1 <- cos(2*pi*time/period)
@@ -65,7 +62,7 @@ dryseq_lm=function(countData,group,time,period=24,sample_name=colnames(countData
 
   message("fitting rhythmic models")
 
-  models = create_matrix_list(time,N,period)
+  models = create_matrix_list(time, group, N,period)
   #Reorder u, a, b
   models = lapply(models, function(l) l[,c(grep("u",colnames(l)),grep("a|b",colnames(l)))])
 

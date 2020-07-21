@@ -50,7 +50,7 @@ dry_plot(dryList, "feature_113")
 ```
 
 
-## dryR can cope with normally distributed datasets
+## dryR for normally distributed data
 To asses temporal variation of normally distributed measurements, we implemented the function `drylm` that can deal with gaussian noise using linear models. 
 
 ### Running an example

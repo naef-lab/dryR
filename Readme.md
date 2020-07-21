@@ -73,7 +73,7 @@ dry_plot(dryList, "feature_013")
 ```
 
 ## DryR with a simple vector as input
-You can run `dryRlm` with a simple vector that contains data from a time series of multiple groups. 
+You can run `drylm` with a simple vector that contains data from a time series of multiple groups. 
 
 ```
 require("dryR")

@@ -47,9 +47,22 @@ dryList[["cook"]]       # cook's distance for outlier detection
 
 #plot a feature of interest
 dry_plot(dryList, "feature_113")
+```
+
+
+## dryR can cope with normally distributed datasets
+To asses temporal variation of normally distributed measurements, we implemented the function `drylm` that can deal with gaussian noise using linear models. 
+
+### Running an example
+```
+require("dryR")
+
+# prepare arguments
+data      = log(simData[["countData"]]+1)
+group     = simData[["group"]]
+time      = simData[["time"]]
 
 # run the analysis with normally distributed data
-data    = log(simData[["countData"]]+1)
 dryList = drylm(data,group,time)
 
 # explore the results

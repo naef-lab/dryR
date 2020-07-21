@@ -9,14 +9,14 @@
 #' @param batch	vector containing potential batch effects between samples. Default: no batch effect.
 #' @param nthreads vector numeric value to indicate the threads for parallel computing .Default: 60 \% of detected cores.
 #' @return a list that contains the following data.frames: results (summary of results), parameters (rhythmic parameters), ncounts (normalized counts), counts (raw counts), cook (cook's distance)
-#' @examples data = log(simData[["data"]]+1)
+#' @examples data = log(simData[["countData"]]+1)
 #' group = simData[["group"]]
 #' time  = simData[["time"]]
 #' dryList = drylm(data,group,time)
 #' head(dryList[["results"]])    # data frame summarizing results
 #' head(dryList[["parameters"]]) # coefficients: phase, amplitude and mean for each group
 #' head(dryList[["ncounts"]])    # normalized counts
-#' @details DryR assesses rhythmicity and mean differences of gene expression in normal data
+#' @details DryR assesses rhythmicity and mean differences of gene expression in normal data.
 #'      When necessary, a batch specific mean (m) can be given to the drylm function to account for technical batch effects.
 #'      A technical batch effect is not allowed to be confounding so the resulting model matrix is fully ranked.
 #'      To select an optimal gene-specific model, drylm first assesses rhythmicity across the different conditions. To this end, dryR defines different models across all groups.

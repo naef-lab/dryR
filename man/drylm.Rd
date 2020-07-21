@@ -36,7 +36,7 @@ a list that contains the following data.frames: results (summary of results), pa
 This function performs a rhythmicity analysis based on linear models with a subsequent models selection. The function accepts a time series assuming normally distributed noise of two or more groups. The function outputs the parameters mean, phase and amplitude are for each group.
 }
 \details{
-DryR assesses rhythmicity and mean differences of gene expression in normal data
+DryR assesses rhythmicity and mean differences of gene expression in normal data.
      When necessary, a batch specific mean (m) can be given to the drylm function to account for technical batch effects.
      A technical batch effect is not allowed to be confounding so the resulting model matrix is fully ranked.
      To select an optimal gene-specific model, drylm first assesses rhythmicity across the different conditions. To this end, dryR defines different models across all groups.
@@ -52,7 +52,7 @@ DryR assesses rhythmicity and mean differences of gene expression in normal data
      drylm then defined different models for the mean coefficient with differing or shared means between groups. Each model is solved using linear regression and each gene was assigned to a preferred model based on the BICW as described above for the first iteration.
 }
 \examples{
-data = log(simData[["data"]]+1)
+data = log(simData[["countData"]]+1)
 group = simData[["group"]]
 time  = simData[["time"]]
 dryList = drylm(data,group,time)

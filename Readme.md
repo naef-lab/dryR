@@ -35,7 +35,7 @@ countData = simData[["countData"]]
 group     = simData[["group"]]
 time      = simData[["time"]]
 
-# run the analysis
+# run the analysis for count data (e.g. RNA-Seq data)
 dryList   = dryseq(countData,group,time)
 
 # explore the results
@@ -45,8 +45,32 @@ dryList[["ncounts"]]    # normalized counts
 dryList[["counts"]]     # raw counts
 dryList[["cook"]]       # cook's distance for outlier detection
 
+#plot a feature of interest
 dry_plot(dryList, "feature_113")
 ```
 
+
+## Normally distributed data
+To asses temporal variation of normally distributed measurements, we implemented the function `drylm` that can deal with gaussian noise using linear models. 
+
+```
+require("dryR")
+
+# prepare arguments
+data      = log(simData[["countData"]]+1)
+group     = simData[["group"]]
+time      = simData[["time"]]
+
+# run the analysis with normally distributed data
+dryList = drylm(data,group,time)
+
+# explore the results
+dryList[["results"]]    # data frame summarizing results
+dryList[["parameters"]] # coefficients: phase, amplitude and mean for each group
+
+#plot a feature of interest
+dry_plot(dryList, "feature_013")
+```
+
 ## Help
-A documentation using `?dryseq` function is available. 
+A documentation using `?dryseq` pr `?drylm` function is available. 

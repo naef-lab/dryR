@@ -1,6 +1,6 @@
 #' Differential rhythmicity analysis for RNA-Seq datasets
 #'
-#' This function performs a rhythmicity analysis based on linear models with a subsequent models selection. The function accepts a time series assuming normally distributed noise of two or more groups. The function outputs the parameters mean, phase and amplitude are for each group
+#' This function performs a rhythmicity analysis based on linear models with a subsequent models selection. The function accepts a time series assuming normally distributed noise of two or more groups. The function outputs the parameters mean, phase and amplitude are for each group.
 #' @param data	matrix or vector containing data; each column represents a sample, each row represents a feature (e.g. metabolite, gene expression, body temperature).
 #' @param group	vector containing the name of each group (e.g. wildtype, knock-out).
 #' @param time	vector containing numeric values of the zeiteber/circadian time for each sample.
@@ -9,10 +9,10 @@
 #' @param batch	vector containing potential batch effects between samples. Default: no batch effect.
 #' @param nthreads vector numeric value to indicate the threads for parallel computing .Default: 60 \% of detected cores.
 #' @return a list that contains the following data.frames: results (summary of results), parameters (rhythmic parameters), ncounts (normalized counts), counts (raw counts), cook (cook's distance)
-#' @examples data = simData[["data"]]
+#' @examples data = log(simData[["data"]]+1)
 #' group = simData[["group"]]
 #' time  = simData[["time"]]
-#' dryList = dryseq(data,group,time)
+#' dryList = drylm(data,group,time)
 #' head(dryList[["results"]])    # data frame summarizing results
 #' head(dryList[["parameters"]]) # coefficients: phase, amplitude and mean for each group
 #' head(dryList[["ncounts"]])    # normalized counts
@@ -40,11 +40,11 @@ drylm=function(data,group,time,period=24,sample_name=colnames(data),batch=rep("A
   library("circular")
   library("RColorBrewer")
 
-  sel       = order(group,time)
-  time      = time[sel]
-  group     = group[sel]
-  data = data[,sel]
-  batch = batch[sel]
+  sel         = order(group,time)
+  time        = time[sel]
+  group       = group[sel]
+  data        = data[,sel]
+  batch       = batch[sel]
   sample_name = sample_name[sel]
 
 

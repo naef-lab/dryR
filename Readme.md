@@ -65,8 +65,8 @@ time      = simData[["time"]]
 dryList = drylm(data,group,time)
 
 # explore the results
-head(dryList[["results"]])    # data frame summarizing results
-head(dryList[["parameters"]]) # coefficients: phase, amplitude and mean for each group
+dryList[["results"]]    # data frame summarizing results
+dryList[["parameters"]] # coefficients: phase, amplitude and mean for each group
 
 #plot a feature of interest
 dry_plot(dryList, "feature_013")

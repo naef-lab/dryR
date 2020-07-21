@@ -49,4 +49,4 @@ dry_plot(dryList, "feature_113")
 ```
 
 ## Help
-A documentation using `?dryseq` function is available. 
+A documentation using `?dryseq` pr `?drylm` function is available. 

@@ -1,18 +1,18 @@
 #' Differential rhythmicity analysis for RNA-Seq datasets
 #'
-#' This function performs a rhythmicity analysis based on linear models with a subsequent models selection. The function accepts raw count data from a temporal RNA-Seq dataset of two or more groups. The function outputs parameters mean, phase and amplitude are for each group.
-#' @param countData	matrix containing library normalized and log transformed reads counts; each column represents a sample, each row represents a gene/transcript.
-#' @param group	vector containing the name of each sample.
-#' @param time	vector containing numeric values of the time for each sample.
-#' @param period	numeric value to indicate period length of the oscillation. Default: circadian data period of 24 h.
+#' This function performs a rhythmicity analysis based on linear models with a subsequent models selection. The function accepts a time series assuming normally distributed noise of two or more groups The function outputs parameters mean, phase and amplitude are for each group
+#' @param data	matrix/vector containing data; each column represents a sample, each row represents a feature (e.g. metabolite, gene expression, body temperature).
+#' @param group	vector containing the name of each group (e.g. wildtype, knock-out).
+#' @param time	vector containing numeric values of the zeiteber/circadian time for each sample.
+#' @param period	numeric value to indicate period length of the oscillation. Default: period = 24 h.
 #' @param sample_name	vector containing sample names. Default: colnames are sample names.
 #' @param batch	vector containing potential batch effects between samples. Default: no batch effect.
 #' @param nthreads vector numeric value to indicate the threads for parallel computing .Default: 60 \% of detected cores.
 #' @return a list that contains the following data.frames: results (summary of results), parameters (rhythmic parameters), ncounts (normalized counts), counts (raw counts), cook (cook's distance)
-#' @examples countData = simData[["countData"]]
+#' @examples data = simData[["data"]]
 #' group = simData[["group"]]
 #' time  = simData[["time"]]
-#' dryList = dryseq(countData,group,time)
+#' dryList = dryseq(data,group,time)
 #' head(dryList[["results"]])    # data frame summarizing results
 #' head(dryList[["parameters"]]) # coefficients: phase, amplitude and mean for each group
 #' head(dryList[["ncounts"]])    # normalized counts
@@ -31,7 +31,7 @@
 #'      In a second iteration step, dryR set the coefficient α and β to the values of the selected model in the first regression.
 #'      dryseq then defined different models for the mean coefficient with differing or shared means between groups. Each model is solved using generalized linear regression and each gene was assigned to a preferred model based on the BICW as described above for the first iteration.
 
-drylm=function(countData,group,time,period=24,sample_name=colnames(countData),batch=rep("A",length(sample_name)),n.cores=round(detectCores()*.6,0) ){
+drylm=function(data,group,time,period=24,sample_name=colnames(data),batch=rep("A",length(sample_name)),n.cores=round(detectCores()*.6,0) ){
   require("DESeq2")
   require("combinat")
   require("parallel")
@@ -43,7 +43,7 @@ drylm=function(countData,group,time,period=24,sample_name=colnames(countData),ba
   sel       = order(group,time)
   time      = time[sel]
   group     = group[sel]
-  countData = countData[,sel]
+  data = data[,sel]
   batch = batch[sel]
   sample_name = sample_name[sel]
 
@@ -54,7 +54,7 @@ drylm=function(countData,group,time,period=24,sample_name=colnames(countData),ba
   conds  = cbind(group,s1,c1,batch)
   colnames(conds) = c("group","s1","c1","batch")
 
-  colData <- data.frame(row.names=colnames(countData), conds)
+  colData <- data.frame(row.names=colnames(data), conds)
   N=length(unique(group))
 
   ############################
@@ -77,14 +77,14 @@ drylm=function(countData,group,time,period=24,sample_name=colnames(countData),ba
     models = lapply(models, function(l) l[,c(grep("u",colnames(l)),grep("BATCH",colnames(l)),grep("a|b",colnames(l)))]   )
   }
 
-  fit = parallel::mclapply(split(countData, rownames(countData)),
+  fit = parallel::mclapply(split(data, rownames(data)),
                            do_all_lm,
                            my_mat= models,
                            mc.cores=n.cores)
 
   # calculate the BIC
   BIC = unlist(fit)[grep('BIC$',names(unlist(fit)))]
-  BIC= matrix(BIC,nrow=nrow(countData),byrow=T)
+  BIC= matrix(BIC,nrow=nrow(data),byrow=T)
 
   #calculate the BICW
   BICW               = t(apply(BIC,1,compute_BICW))
@@ -102,10 +102,10 @@ drylm=function(countData,group,time,period=24,sample_name=colnames(countData),ba
   for (i in 1:length(model_mean_cond)){
     rownames(model_mean_cond[[i]]) = rownames(colData)}
 
-  gene.list=as.list(rownames(countData))
+  gene.list=as.list(rownames(data))
   fit = parallel::mclapply(gene.list,
                            FUN=do_all_lm_mr,
-                           countData,
+                           data,
                            my_mat_r = models,
                            my_mat_m = model_mean_cond,
                            choosen_model = choosen_model,
@@ -113,7 +113,7 @@ drylm=function(countData,group,time,period=24,sample_name=colnames(countData),ba
 
   #extract BIC
   BIC_mean = unlist(fit)[grep('BIC$',names(unlist(fit)))]
-  BIC_mean = matrix(BIC_mean,nrow=nrow(countData),byrow=T)
+  BIC_mean = matrix(BIC_mean,nrow=nrow(data),byrow=T)
 
   #calculate the BICW
   BICW_mean = t(apply(BIC_mean,1,compute_BICW))
@@ -128,8 +128,8 @@ drylm=function(countData,group,time,period=24,sample_name=colnames(countData),ba
   message("extracting rhythmic parameters")
   parameters=NULL
 
-  parameters =  foreach (i = 1:nrow(countData)) %dopar% {
-    gene = rownames(countData)[i]
+  parameters =  foreach (i = 1:nrow(data)) %dopar% {
+    gene = rownames(data)[i]
 
     dds= fit[[i]][[choosen_model_mean[i]]]$param
     out = compute_param_l(dds,period, N)
@@ -137,11 +137,11 @@ drylm=function(countData,group,time,period=24,sample_name=colnames(countData),ba
   }
   parameters            = data.frame(t(do.call(cbind, parameters)))
   colnames(parameters)  = c(paste(c('mean','a','b','amp','relamp','phase'),rep(unique(group),each =6), sep = "_"))
-  rownames(parameters)  = rownames(countData)
+  rownames(parameters)  = rownames(data)
 
 
   #normalized counts
-  ncounts_RF = countData
+  ncounts_RF = data
 
   # generate a table summarizing the analysis
   complete_parameters = cbind(parameters,choosen_model,choosen_model_BICW, choosen_model_mean, choosen_model_mean_BICW)

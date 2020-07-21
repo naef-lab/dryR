@@ -72,5 +72,26 @@ dryList[["parameters"]] # coefficients: phase, amplitude and mean for each group
 dry_plot(dryList, "feature_013")
 ```
 
+## DryR with a simple vector as input
+You can run `dryRlm` with a simple vector that contains data from a time series of multiple groups. 
+
+```
+require("dryR")
+
+# define time and group for each sample
+time        = c(1:48,1:48)   # Zeitgeber time or Circadian time in h for each sample
+group       = c(rep("KO",48), rep("WT",48))
+
+# run the analysis with normally distributed data
+dryList = drylm(vector_example,group,time)
+
+# explore the results
+dryList[["results"]]    # data frame summarizing results. Row 2 is a copy of row 1.
+dryList[["parameters"]] # coefficients: phase, amplitude and mean for each group. Row 2 is a copy of row 1.
+
+#plot the result of the selected model
+dry_plot(dryList, "X1")
+```
+
 ## Help
 A documentation using `?dryseq` pr `?drylm` function is available. 

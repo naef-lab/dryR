@@ -326,9 +326,10 @@ dry_plot = function (dryList, gene)
   require("Rmisc")
   #require("limma")
 
-
+  normal = FALSE
   if("ncounts" %in% names(dryList)){vsd        = log2(dryList[["ncounts"]]+1)}
-  if("values" %in% names(dryList)){vsd         = dryList[["values"]]}
+  if("values" %in% names(dryList)){vsd         = dryList[["values"]]
+                                    normal = T}
 
   parameters = dryList[["parameters"]][,grep("^mean|^a_|^b_|^amp|^phase|^relamp",colnames(dryList[["parameters"]]))]
 
@@ -382,7 +383,7 @@ dry_plot = function (dryList, gene)
 
   colnames(m)       = c("group","value","time")
 
-  m$value[which(m$value<0)] = 0
+  if(normal==FALSE) {m$value[which(m$value<0)] = 0}
 
   gg1 = ggplot(d, aes(x=time, y=value, group=group, color=group)) +
     geom_errorbar(aes(ymin=value-se, ymax=value+se), width=.4) +

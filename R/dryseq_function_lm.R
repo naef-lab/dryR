@@ -42,8 +42,8 @@ drylm=function(data,group,time,period=24,sample_name=colnames(data),batch=rep("A
 
   vec = F
   if(is.vector(data)){data = rbind(data,data)
-                      rownames(data) = c("X1","X2")
-                      vec = T}
+  rownames(data) = c("X1","X2")
+  vec = T}
 
   sel         = order(group,time)
   time        = time[sel]

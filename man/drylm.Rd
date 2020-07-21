@@ -15,7 +15,7 @@ drylm(
 )
 }
 \arguments{
-\item{data}{matrix or vector containing data; each column represents a sample, each row represents a feature (e.g. metabolite, gene expression, body temperature).}
+\item{data}{matrix or vector containing data; if a matrix is provided each column represents a sample, each row represents a feature.}
 
 \item{group}{vector containing the name of each group (e.g. wildtype, knock-out).}
 

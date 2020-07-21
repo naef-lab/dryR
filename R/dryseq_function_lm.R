@@ -1,7 +1,7 @@
 #' Differential rhythmicity analysis for RNA-Seq datasets
 #'
 #' This function performs a rhythmicity analysis based on linear models with a subsequent models selection. The function accepts a time series assuming normally distributed noise of two or more groups. The function outputs the parameters mean, phase and amplitude are for each group.
-#' @param data	matrix or vector containing data; each column represents a sample, each row represents a feature (e.g. metabolite, gene expression, body temperature).
+#' @param data	matrix or vector containing data; if a matrix is provided each column represents a sample, each row represents a feature.
 #' @param group	vector containing the name of each group (e.g. wildtype, knock-out).
 #' @param time	vector containing numeric values of the zeiteber/circadian time for each sample.
 #' @param period	numeric value to indicate period length of the oscillation. Default: period = 24 h.

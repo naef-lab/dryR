@@ -1,7 +1,7 @@
 #' Differential rhythmicity analysis for RNA-Seq datasets
 #'
-#' This function performs a rhythmicity analysis based on linear models with a subsequent models selection. The function accepts a time series assuming normally distributed noise of two or more groups The function outputs parameters mean, phase and amplitude are for each group
-#' @param data	matrix/vector containing data; each column represents a sample, each row represents a feature (e.g. metabolite, gene expression, body temperature).
+#' This function performs a rhythmicity analysis based on linear models with a subsequent models selection. The function accepts a time series assuming normally distributed noise of two or more groups. The function outputs the parameters mean, phase and amplitude are for each group
+#' @param data	matrix or vector containing data; each column represents a sample, each row represents a feature (e.g. metabolite, gene expression, body temperature).
 #' @param group	vector containing the name of each group (e.g. wildtype, knock-out).
 #' @param time	vector containing numeric values of the zeiteber/circadian time for each sample.
 #' @param period	numeric value to indicate period length of the oscillation. Default: period = 24 h.
@@ -16,20 +16,20 @@
 #' head(dryList[["results"]])    # data frame summarizing results
 #' head(dryList[["parameters"]]) # coefficients: phase, amplitude and mean for each group
 #' head(dryList[["ncounts"]])    # normalized counts
-#' @details DryR assesses rhythmicity and mean differences of gene expression in RNA-Seq count data.
-#'      When necessary, a batch specific mean (m) can be given to the dryseq function to account for technical batch effects.
+#' @details DryR assesses rhythmicity and mean differences of gene expression in normal data
+#'      When necessary, a batch specific mean (m) can be given to the drylm function to account for technical batch effects.
 #'      A technical batch effect is not allowed to be confounding so the resulting model matrix is fully ranked.
-#'      To select an optimal gene-specific model, dryseq first assesses rhythmicity across the different conditions. To this end, dryR defines different models across all groups.
+#'      To select an optimal gene-specific model, drylm first assesses rhythmicity across the different conditions. To this end, dryR defines different models across all groups.
 #'      Models refined to have either zero (non-rhythmic pattern) or non-zero (rhythmic pattern) α and β coefficients for each analyzed group. Moreover, for some models the values of α and β can be also shared within any combination of all groups
 #'      The coefficients α and β were used to calculate the phase (arctan(α/β)) and amplitude (log2-fold change peak-to-trough; 2sqrt(α^2+β^2) ) of a gene.
 #'      Bayesian information criterion (BIC) based model selection was employed to account for model complexity using the following formula:
-#'      \cr \cr   BIC_j = ln(n)k - 2ln(L̂)\cr \cr
-#'      L̂ is defined as the log-likelihood of the model j from the regression, n is the number of data points and k is the number of parameters.
+#'      \cr \cr BIC_j = n ln(RSS_j/n)+ k ln(n) \cr \cr
+#'      with RSS the sum of residuals square of the multilinear regression, n the number of time points, and k the number of parameters.
 #'      To assess the confidence of the selected model j we calculated the Schwarz weight (BICW):
 #'      \cr \cr   BICW_j = e^(0.5ΔBIC_j)\ sum(e^0.5 ΔBIC_m), with ΔBIC_j - BIC_j - BIC_m*\cr \cr
-#'      m* is the minimum BIC value in the entire model set. Dryseq consideres the BICW_j as the confidence level for model j. The model with the highest BICW is selected as the optimal model within the set of all defined models.
-#'      In a second iteration step, dryR set the coefficient α and β to the values of the selected model in the first regression.
-#'      dryseq then defined different models for the mean coefficient with differing or shared means between groups. Each model is solved using generalized linear regression and each gene was assigned to a preferred model based on the BICW as described above for the first iteration.
+#'      m* is the minimum BIC value in the entire model set. drylm consideres the BICW_j as the confidence level for model j. The model with the highest BICW is selected as the optimal model within the set of all defined models.
+#'      In a second iteration step, drylm set the coefficient α and β to the values of the selected model in the first regression.
+#'      drylm then defined different models for the mean coefficient with differing or shared means between groups. Each model is solved using linear regression and each gene was assigned to a preferred model based on the BICW as described above for the first iteration.
 
 drylm=function(data,group,time,period=24,sample_name=colnames(data),batch=rep("A",length(sample_name)),n.cores=round(detectCores()*.6,0) ){
   require("DESeq2")

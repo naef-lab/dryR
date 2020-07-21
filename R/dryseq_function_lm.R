@@ -40,12 +40,17 @@ drylm=function(data,group,time,period=24,sample_name=colnames(data),batch=rep("A
   library("circular")
   library("RColorBrewer")
 
+  vec = F
+  if(is.vector(data)){data = rbind(data,data)
+                      rownames(data) = c("X1","X2")
+                      vec = T}
+
   sel         = order(group,time)
   time        = time[sel]
   group       = group[sel]
   data        = data[,sel]
   batch       = batch[sel]
-  sample_name = sample_name[sel]
+  sample_name = as.character(sample_name[sel])
 
 
   s1 <- sin(2*pi*time/period)
@@ -159,6 +164,15 @@ drylm=function(data,group,time,period=24,sample_name=colnames(data),batch=rep("A
   out[["BICW_mean"]]   = BICW_mean
   out[["values"]]      = ncounts_RF
   out[["parameters"]]  = complete_parameters
+
+  #if(vec == TRUE){
+  #  out[["results"]]     = global_table_df[1,]
+  #  out[["BICW_rhythm"]] = BICW[1,]
+  #  out[["BICW_mean"]]   = BICW_mean[1,]
+  #  out[["values"]]      = ncounts_RF[1,]
+  #  out[["parameters"]]  = complete_parameters[1,]
+  #}
+
 
   message("finished!")
   return(out)

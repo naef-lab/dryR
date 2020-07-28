@@ -388,8 +388,7 @@ dry_plot = function (dryList, gene)
   gg1 = ggplot(d, aes(x=time, y=value, group=group, color=group)) +
     geom_errorbar(aes(ymin=value-se, ymax=value+se), width=.4) +
     geom_point(size=2, shape=19) +
-    xlab("Zeitgeber Time (h)") +
-    #ylab("Log Norm. read counts") +
+    xlab("Time (h)") +
     ggtitle(ID) +
     scale_x_continuous(breaks=c(0,6,12,18,24,30)) +
     theme_bw(base_size = 10) +

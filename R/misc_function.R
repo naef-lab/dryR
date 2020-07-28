@@ -321,10 +321,8 @@ annotate_matrix = function(m,group){
 dry_plot = function (dryList, gene)
 {
   require("reshape2")
-  #require("stringr")
   require("ggplot2")
   require("Rmisc")
-  #require("limma")
 
   normal = FALSE
   if("ncounts" %in% names(dryList)){vsd        = log2(dryList[["ncounts"]]+1)}
@@ -332,8 +330,6 @@ dry_plot = function (dryList, gene)
                                     normal = T}
 
   parameters = dryList[["parameters"]][,grep("^mean|^a_|^b_|^amp|^phase|^relamp",colnames(dryList[["parameters"]]))]
-
-
 
   ID = rownames(dryList[["results"]] )[grep(gene,rownames(dryList[["results"]] ))]
   print(ID)
@@ -346,10 +342,8 @@ dry_plot = function (dryList, gene)
   d$time            = as.numeric(dryList[["time"]])
   d$time            = d$time%%24
 
-
-  library(Rmisc)
-  d <- summarySE(d, measurevar="value", groupvars=c("time","group"))
-
+  suppressWarnings({ d <- summarySE(d, measurevar="value", groupvars=c("time","group")) })
+  
   # generate dataframe m with the fit data
   v = seq(0,24,1)
   fit_d_0 = parameters[which(rownames(parameters)==ID),grep("mean",colnames(parameters))] # intercept

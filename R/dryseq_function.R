@@ -55,7 +55,7 @@ dryseq=function(countData,group,time,period=24,sample_name=colnames(countData),b
   batch = batch[sel]
   sample_name = sample_name[sel]
 
-  registerDoMC(cores=n.cores)
+  doMC::registerDoMC(cores=n.cores)
 
   countData = countData[rowSums(countData)!=0,]
 

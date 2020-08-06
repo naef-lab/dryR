@@ -48,7 +48,7 @@
 #' @references Anders, S. and Huber, W. (2014) Moderated estimation of fold change and dispersion for RNA-seq data with DESeq2. Genome Biology
 dryseq=function(countData,group,time,period=24,sample_name=colnames(countData),batch=rep("A",length(sample_name)),n.cores=round(detectCores()*.6,0) ){
 
-  registerDoParallel(cores=n.cores)
+  doParallel::registerDoParallel(cores=n.cores)
   sel       = order(group,time)
   time      = time[sel]
   group     = group[sel]

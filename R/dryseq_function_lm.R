@@ -33,7 +33,7 @@
 
 drylm=function(data,group,time,period=24,sample_name=colnames(data),batch=rep("A",length(sample_name)),n.cores=round(detectCores()*.6,0) ){
 
-  registerDoParallel(cores=n.cores)
+  doParallel::registerDoParallel(cores=n.cores)
 
   vec = F
   if(is.vector(data)){data = rbind(data,data)

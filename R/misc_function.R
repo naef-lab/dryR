@@ -320,9 +320,7 @@ annotate_matrix = function(m,group){
 #####################################
 dry_plot = function (dryList, gene)
 {
-  require("reshape2")
-  require("ggplot2")
-  require("Rmisc")
+
 
   normal = FALSE
   if("ncounts" %in% names(dryList)){vsd        = log2(dryList[["ncounts"]]+1)}
@@ -343,8 +341,7 @@ dry_plot = function (dryList, gene)
   d$time            = d$time%%24
 
   suppressWarnings({ d <- summarySE(d, measurevar="value", groupvars=c("time","group")) })
-  
-  # generate dataframe m with the fit data
+
   v = seq(0,24,1)
   fit_d_0 = parameters[which(rownames(parameters)==ID),grep("mean",colnames(parameters))] # intercept
   fit_d_1 = parameters[which(rownames(parameters)==ID),grep("a_",colnames(parameters))] # coefficient a

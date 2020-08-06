@@ -32,13 +32,8 @@
 #'      drylm then defined different models for the mean coefficient with differing or shared means between groups. Each model is solved using linear regression and each gene was assigned to a preferred model based on the BICW as described above for the first iteration.
 
 drylm=function(data,group,time,period=24,sample_name=colnames(data),batch=rep("A",length(sample_name)),n.cores=round(detectCores()*.6,0) ){
-  require("DESeq2")
-  require("combinat")
-  require("parallel")
-  require("gplots")
-  library("doMC")
-  library("circular")
-  library("RColorBrewer")
+
+  registerDoParallel(cores=n.cores)
 
   vec = F
   if(is.vector(data)){data = rbind(data,data)
@@ -51,7 +46,6 @@ drylm=function(data,group,time,period=24,sample_name=colnames(data),batch=rep("A
   data        = data[,sel]
   batch       = batch[sel]
   sample_name = as.character(sample_name[sel])
-
 
   s1 <- sin(2*pi*time/period)
   c1 <- cos(2*pi*time/period)

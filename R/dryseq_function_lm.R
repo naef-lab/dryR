@@ -34,7 +34,7 @@
 drylm=function(data,group,time,period=24,sample_name=colnames(data),batch=rep("A",length(sample_name)),n.cores=round(parallel::detectCores()*.6,0) ){
 
   doParallel::registerDoParallel(cores=n.cores)
-
+  #update
   vec = F
   if(is.vector(data)){data = rbind(data,data)
   rownames(data) = c("X1","X2")

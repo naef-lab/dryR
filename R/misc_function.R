@@ -276,7 +276,7 @@ create_matrix_list_mean = function(N,group){
   names(com_l)=unique(group)
   com_l=com_l[order(apply(com_l,1,function(x) length(unique(x))),apply(com_l,1,function(x) length(which(x==max(x))))),]
   rownames(com_l)=1:nrow(com_l)
-  heatmap.2(as.matrix(com_l),
+  gplots::heatmap.2(as.matrix(com_l),
             dendrogram='none',
             Rowv=FALSE,
             Colv=FALSE,

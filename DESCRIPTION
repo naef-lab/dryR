@@ -18,7 +18,8 @@ Imports:
     reshape2,
     stringr,
     ggplot2,
-    Rmisc,
+    Rmisc
+Depends:
     foreach
 Encoding: UTF-8
 LazyData: true

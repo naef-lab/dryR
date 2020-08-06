@@ -281,7 +281,7 @@ create_matrix_list_mean = function(N,group){
             Rowv=FALSE,
             Colv=FALSE,
             trace='none',
-            col=brewer.pal(n = 8, name = 'Set2'),
+            col=RColorBrewer::brewer.pal(n = 8, name = 'Set2'),
             colsep=1:ncol(com_l),
             rowsep=1:nrow(com_l),
             cexRow=0.8,

@@ -49,7 +49,7 @@ plot_models_rhythm = function(DF,file_path_name,time,group, period=24){
       x_s.m=x_s.m[,match(com.u,colnames(x_s.m))]
 
 
-      heatmap.2(as.matrix(x_s.m),
+      gplots::heatmap.2(as.matrix(x_s.m),
                 Rowv = NA,
                 Colv = NA,
                 ylab = NA ,

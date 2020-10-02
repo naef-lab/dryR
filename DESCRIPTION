@@ -19,7 +19,7 @@ Imports:
     stringr,
     ggplot2,
     Rmisc,
-    pheatmaps
+    pheatmap
 Depends:
     foreach
 Encoding: UTF-8

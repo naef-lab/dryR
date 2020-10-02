@@ -81,12 +81,11 @@ drylm=function(data,group,time,period=24,sample_name=colnames(data),batch=rep("A
                            my_mat= models,
                            mc.cores=n.cores)
 
-  rownames(BIC)=names(fit)
-  BIC=BIC[rownames(data),]
-
   # calculate the BIC
   BIC = unlist(fit)[grep('BIC$',names(unlist(fit)))]
   BIC= matrix(BIC,nrow=nrow(data),byrow=T)
+  rownames(BIC)=names(fit)
+  BIC=BIC[rownames(data),]
 
   #calculate the BICW
   BICW               = t(apply(BIC,1,compute_BICW))

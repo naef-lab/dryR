@@ -70,12 +70,12 @@ plot_models_rhythm = function(dryList,file_path_name){
         }
         ba = ba + 1
       }
+
       bas = unique(sum_phase)
-      la = match(bas,sum_phase)
-      if(length(unique(sum_phase[sum_phase!=0])) > 1){
-
-        pairs(x_s[,pos_phase[la]],cex=0.5)
-
+      bas=bas[bas!=0]
+      la = match(bas, sum_phase)
+      if (length(la) > 1) {
+        pairs(x_s[, pos_phase[la]], cex = 0.5)
       }
 
     }

@@ -12,7 +12,7 @@ plot_models_rhythm = function(dryList,file_path_name){
   group=dryList$group
   x=dryList$results
 
-  pdf(file =paste(file_path_name,'summary_heatmap_models.pdf',sep=''))
+  pdf(file =paste0(file_path_name,'summary_heatmap_models.pdf'))
 
   nb = table(x[,'choosen_model'])
   nb = nb[order(-nb)]
@@ -60,13 +60,13 @@ plot_models_rhythm = function(dryList,file_path_name){
                 main = paste("model",i," #Genes",nrow(x_s),sep =" "),
                 col = colorRampPalette(c('blue','yellow'))(1000))
 
-
+      x_s = subset(x, choosen_model==i)
       par(mfrow=c(1+round(length(pos_phase)/3),3))
       ba = 1
       for(kk in pos_phase){
 
-        if(sum(x[,kk],na.rm=T) !=0){
-          circular_phase24H_histogram(x[,kk], unique(condi)[ba], period)
+        if(sum(x_s[,kk],na.rm=T) !=0){
+          circular_phase24H_histogram(x_s[,kk], unique(condi)[ba], period)
         }
         ba = ba + 1
       }
@@ -74,7 +74,7 @@ plot_models_rhythm = function(dryList,file_path_name){
       la = match(bas,sum_phase)
       if(length(unique(sum_phase[sum_phase!=0])) > 1){
 
-        pairs(x[,pos_phase[la]],cex=0.5)
+        pairs(x_s[,pos_phase[la]],cex=0.5)
 
       }
 

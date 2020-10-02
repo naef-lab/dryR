@@ -18,10 +18,11 @@ Imports:
     reshape2,
     stringr,
     ggplot2,
-    Rmisc,
-    pheatmap
+    Rmisc
 Depends:
-    foreach
+    foreach,
+    pheatmap,
+    plotrix
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.0.9000

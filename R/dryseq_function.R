@@ -87,7 +87,7 @@ dryseq=function(countData,group,time,period=24,sample_name=colnames(countData),b
     models = lapply(models, function(l) l[,c(grep("u",colnames(l)),grep("BATCH",colnames(l)),grep("a|b",colnames(l)))]   )
   }
 
-  dds = DESeq2::DESeqDataSetFromMatrix(countData = countData, colData = colData,   design = models[[length(models)]])
+  dds = DESeq2::DESeqDataSetFromMatrix(countData = countData, colData = colData,  design=~1)
   dds.full = DESeq2::DESeq(dds, full=models[[length(models)]], betaPrior = F, fitType = "parametric", test = "Wald", parallel =T, quiet = T)
 
   deviances = sapply(models[-length(models)], function(m){

@@ -9,7 +9,6 @@ Description: DryR ( Differential RhythmicitY analysis in R) is a statistical
      in rhythmic parameters (amplitude and phase) and mean expression in multiple conditions.
 biocViews: Software, BiologicalQuestion
 Imports:
-    DESeq2,
     combinat,
     parallel,
     doParallel,
@@ -21,6 +20,7 @@ Imports:
     ggplot2,
     Rmisc
 Depends:
+    DESeq2,
     S4Vectors,
     foreach,
     pheatmap,

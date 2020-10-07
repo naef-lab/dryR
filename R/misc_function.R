@@ -321,7 +321,7 @@ dry_plot = function (dryList, gene)
   print(ID)
 
   d = vsd[grep(ID,rownames(vsd)),]
-  d = melt(d)
+  d = reshape2::melt(d)
 
   d$group            = dryList[["group"]]
 

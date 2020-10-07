@@ -28,7 +28,7 @@ devtools::install_github("naef-lab/dryR")
 
 ### Running an example
 ```
-require("dryR")
+library("dryR")
 
 # prepare arguments
 countData = simData[["countData"]]
@@ -57,7 +57,7 @@ plot_models_rhythm(dryList, "./")
 To asses temporal variation of normally distributed measurements, we implemented the function `drylm` that can deal with gaussian noise using linear models. 
 
 ```
-require("dryR")
+library("dryR")
 
 # prepare arguments
 data      = log(simData[["countData"]]+1)
@@ -82,7 +82,7 @@ plot_models_rhythm(dryList, "./")
 You can run `drylm` with a simple vector that contains data from a time series of multiple groups. 
 
 ```
-require("dryR")
+library("dryR")
 
 # define time and group for each sample
 time        = c(1:48,1:48)   # Zeitgeber time or Circadian time in h for each sample

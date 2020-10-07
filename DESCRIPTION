@@ -7,8 +7,8 @@ Maintainer: The package maintainer <cedric.gobet@epfl.ch>
 Description: DryR ( Differential RhythmicitY analysis in R) is a statistical
      framework based on model selection that is designed to detect and estimate changes 
      in rhythmic parameters (amplitude and phase) and mean expression in multiple conditions.
+biocViews:
 Imports:
-    biocViews,
     DESeq2,
     combinat,
     parallel,

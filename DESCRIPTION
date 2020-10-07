@@ -20,6 +20,7 @@ Imports:
     ggplot2,
     Rmisc
 Depends:
+    R (>= 3.5.0),
     DESeq2,
     S4Vectors,
     foreach,

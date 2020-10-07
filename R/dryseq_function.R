@@ -191,7 +191,7 @@ dryseq=function(countData,group,time,period=24,sample_name=colnames(countData),b
   counts_RF        =  counts(dds.full, normalized = FALSE)
 
   #vst stabilized counts
-  vsd <- varianceStabilizingTransformation(dds.full)
+  vsd <- DESeq2::varianceStabilizingTransformation(dds.full)
   vsd <- assay(vsd)
 
   #normalized counts

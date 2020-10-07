@@ -21,6 +21,7 @@ Imports:
     ggplot2,
     Rmisc
 Depends:
+    S4Vectors,
     foreach,
     pheatmap,
     plotrix

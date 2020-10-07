@@ -20,7 +20,7 @@ A user-friendly web application to generate a count table from FASTQ files is pr
 To install `dryR` run the following code in R.
 ```
 install.packages("devtools")
-devtools::install_github("benjaminweger/dryR")
+devtools::install_github("naef-lab/dryR")
 ```
 ## Quick start
 ### Example dataset 

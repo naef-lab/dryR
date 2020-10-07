@@ -8,6 +8,8 @@ Description: DryR ( Differential RhythmicitY analysis in R) is a bayesian statis
      framework based on model selection that is designed to detect and estimate changes 
      in rhythmic parameters (amplitude and phase) and mean expression in multiple conditions.
 Imports:
+    biocViews,
+    DESeq2,
     combinat,
     parallel,
     doParallel,
@@ -19,7 +21,6 @@ Imports:
     ggplot2,
     Rmisc
 Depends:
-    DESeq2,
     foreach,
     pheatmap,
     plotrix

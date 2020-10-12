@@ -6,12 +6,16 @@
 #' @export pdf that summarize the results of dryseq
 #' @examples
 #' XYZn
-plot_models_rhythm = function(dryList,file_path_name, period=24){
+plot_models_rhythm = function(dryList,file_path_name){
 
   t=dryList$time
   group=dryList$group
   x=dryList$results
 
+  if("vsd" %in% names(dryList)){
+    x[,1:ncol(dryList$vsd)]=dryList$vsd
+
+  }
   pdf(file =paste0(file_path_name,'summary_heatmap_models.pdf'))
 
   nb = table(x[,'choosen_model'])

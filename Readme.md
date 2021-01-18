@@ -1,3 +1,7 @@
+
+<!-- badges: start -->
+[![](https://img.shields.io/badge/doi-10.1073/pnas.2015803118-green.svg)](https://doi.org/10.1073/pnas.2015803118)
+<!-- badges: end -->
 # dryR
 `dryR` (Differential RhythmicitY analysis in R) is an R package that provides the statistical framework to assess differential rhythmicity of a time series of RNA-Seq data with two and more conditions.
 

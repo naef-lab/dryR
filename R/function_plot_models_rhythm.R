@@ -6,7 +6,7 @@
 #' @export pdf that summarize the results of dryseq
 #' @examples
 #' XYZn
-plot_models_rhythm = function(dryList,file_path_name){
+plot_models_rhythm = function(dryList,file_path_name, period=24){
 
   t=dryList$time
   group=dryList$group

@@ -358,7 +358,7 @@ dry_plot = function (dryList, gene)
   colnames(m) =  unique(dryList[["group"]])
 
   m =  reshape2::melt(m)
-  m$time = rep(v,2)
+  m$time = rep(v, length(unique(d$group)))
 
   colnames(m)       = c("group","value","time")
 

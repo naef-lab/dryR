@@ -329,7 +329,7 @@ dry_plot = function (dryList, gene)
   d$time            = as.numeric(dryList[["time"]])
   d$time            = d$time%%24
 
-  suppressWarnings({ d <- summarySE(d, measurevar="value", groupvars=c("time","group")) })
+  suppressWarnings({ d <- Rmisc::summarySE(d, measurevar="value", groupvars=c("time","group")) })
 
   v = seq(0,24,1)
   fit_d_0 = parameters[which(rownames(parameters)==ID),grep("mean",colnames(parameters))] # intercept
@@ -365,7 +365,7 @@ dry_plot = function (dryList, gene)
 
   if(normal==FALSE) {m$value[which(m$value<0)] = 0}
 
-  gg1 = ggplot(d, aes(x=time, y=value, group=group, color=group)) +
+  gg1 = ggplot2::ggplot(d, aes(x=time, y=value, group=group, color=group)) +
     geom_errorbar(aes(ymin=value-se, ymax=value+se), width=.4) +
     geom_point(size=2, shape=19) +
     xlab("Time (h)") +

@@ -317,7 +317,8 @@ dry_plot = function (dryList, gene)
 
   parameters = dryList[["parameters"]][,grep("^mean|^a_|^b_|^amp|^phase|^relamp",colnames(dryList[["parameters"]]))]
 
-  ID = rownames(dryList[["results"]] )[grep(gene,rownames(dryList[["results"]] ))]
+  ID = rownames(dryList[["results"]] )[grep(paste0('^',gene,'$'),rownames(dryList[["results"]] ))]
+
   print(ID)
 
   d = vsd[ID, ]

@@ -89,8 +89,8 @@ drylm=function(data,group,time,period=24,sample_name=colnames(data),batch=rep("A
 
   #calculate the BICW
   BICW               = t(apply(BIC,1,compute_BICW))
-  choosen_model      = apply(BIC,1,which.min)
-  choosen_model_BICW = apply(BICW,1,max)
+  chosen_model      = apply(BIC,1,which.min)
+  chosen_model_BICW = apply(BICW,1,max)
 
   ############################
   # FIT BASELINE
@@ -109,7 +109,7 @@ drylm=function(data,group,time,period=24,sample_name=colnames(data),batch=rep("A
                            data,
                            my_mat_r = models,
                            my_mat_m = model_mean_cond,
-                           choosen_model = choosen_model,
+                           chosen_model = chosen_model,
                            mc.cores=n.cores)
 
   #extract BIC
@@ -119,8 +119,8 @@ drylm=function(data,group,time,period=24,sample_name=colnames(data),batch=rep("A
   #calculate the BICW
   BICW_mean = t(apply(BIC_mean,1,compute_BICW))
 
-  choosen_model_mean = apply(BIC_mean,1,which.min)
-  choosen_model_mean_BICW = apply(BICW_mean,1,max)
+  chosen_model_mean = apply(BIC_mean,1,which.min)
+  chosen_model_mean_BICW = apply(BICW_mean,1,max)
 
   ################
   # coefficients / mean, amplitude and phase
@@ -132,7 +132,7 @@ drylm=function(data,group,time,period=24,sample_name=colnames(data),batch=rep("A
   parameters =  foreach (i = 1:nrow(data)) %dopar% {
     gene = rownames(data)[i]
 
-    dds= fit[[i]][[choosen_model_mean[i]]]$param
+    dds= fit[[i]][[chosen_model_mean[i]]]$param
     out = compute_param_l(dds,period, N)
     return(out)
   }
@@ -145,7 +145,7 @@ drylm=function(data,group,time,period=24,sample_name=colnames(data),batch=rep("A
   ncounts_RF = data
 
   # generate a table summarizing the analysis
-  complete_parameters = cbind(parameters,choosen_model,choosen_model_BICW, choosen_model_mean, choosen_model_mean_BICW)
+  complete_parameters = cbind(parameters,chosen_model,chosen_model_BICW, chosen_model_mean, chosen_model_mean_BICW)
   global_table_df = merge(ncounts_RF,complete_parameters, by="row.names")
 
   rownames(global_table_df) = global_table_df[,1]

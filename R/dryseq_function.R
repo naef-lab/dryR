@@ -104,8 +104,8 @@ dryseq=function(countData,group,time,period=24,sample_name=colnames(countData),b
 
   #calculate the BICW
   BICW               = t(apply(BIC,1,compute_BICW))
-  choosen_model      = apply(BIC,1,which.min)
-  choosen_model_BICW = apply(BICW,1,max)
+  chosen_model      = apply(BIC,1,which.min)
+  chosen_model_BICW = apply(BICW,1,max)
 
   ############################
   # FIT BASELINE
@@ -121,7 +121,7 @@ dryseq=function(countData,group,time,period=24,sample_name=colnames(countData),b
   # choose the best model for rhthmicity and then run the mean on the samples
 
   DDS_dev =  foreach (i = 1:length(models)) %dopar% {
-    sel = which(choosen_model==i)
+    sel = which(chosen_model==i)
     gene = rownames(dds.full)[sel]
 
     if(length(gene)>0){
@@ -162,8 +162,8 @@ dryseq=function(countData,group,time,period=24,sample_name=colnames(countData),b
   #calculate the BICW
   BICW_mean = t(apply(BIC_mean,1,compute_BICW))
 
-  choosen_model_mean = apply(BIC_mean,1,which.min)
-  choosen_model_mean_BICW = apply(BICW_mean,1,max)
+  chosen_model_mean = apply(BIC_mean,1,which.min)
+  chosen_model_mean_BICW = apply(BICW_mean,1,max)
 
   ################
   # coefficients / mean, amplitude and phase
@@ -175,8 +175,8 @@ dryseq=function(countData,group,time,period=24,sample_name=colnames(countData),b
 
   parameters =  foreach (i = 1:nrow(deviance_mean)) %dopar% {
     gene = rownames(deviance_mean)[i]
-    cm_r = choosen_model[i]
-    cm_m = choosen_model_mean[i]
+    cm_r = chosen_model[i]
+    cm_m = chosen_model_mean[i]
     dds= DDS_dev[[cm_r]][[cm_m]][[1]]
     out = compute_param(dds, gene ,period,N)
     return(data.frame(row.names= gene, t(matrix(out)))           )
@@ -198,7 +198,7 @@ dryseq=function(countData,group,time,period=24,sample_name=colnames(countData),b
   ncounts_RF       = counts(dds.full, normalized = TRUE)
 
   # generate a table summarizing the analysis
-  complete_parameters = cbind(parameters,choosen_model,choosen_model_BICW, choosen_model_mean, choosen_model_mean_BICW)
+  complete_parameters = cbind(parameters,chosen_model,chosen_model_BICW, chosen_model_mean, chosen_model_mean_BICW)
   global_table = merge(ncounts_RF,complete_parameters, by="row.names")
   rownames(global_table) = global_table$Row.names
   global_table_df  = global_table[,-grep("Row.names",colnames(global_table))]

@@ -18,13 +18,13 @@ plot_models_rhythm = function(dryList,file_path_name, period=24){
   }
   pdf(file =paste0(file_path_name,'summary_heatmap_models.pdf'))
 
-  nb = table(x[,'choosen_model'])
+  nb = table(x[,'chosen_model'])
   nb = nb[order(-nb)]
   mo = as.numeric(names(nb))
 
   for(i in mo){
 
-    x_s = subset(x, choosen_model==i)
+    x_s = subset(x, chosen_model==i)
 
     if(nrow(x_s)>1){
 

@@ -77,10 +77,10 @@ do_all_lm = function(x,my_mat){
 
 ##########################
 
-do_all_lm_mr = function(x,countData,my_mat_r, my_mat_m, choosen_model){
+do_all_lm_mr = function(x,countData,my_mat_r, my_mat_m, chosen_model){
   i=match(x,rownames(countData))
   x=countData[x,]
-  M=my_mat_r[[choosen_model[i]]]
+  M=my_mat_r[[chosen_model[i]]]
   #build the gene specific model from the rhythmic point of view
   gene_specific_mean_models = lapply(my_mat_m,
                                      function(x) cbind(x,M[,-grep("u",colnames(M))]))

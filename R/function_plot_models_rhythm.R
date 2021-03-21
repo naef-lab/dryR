@@ -64,7 +64,7 @@ plot_models_rhythm = function(dryList,file_path_name, period=24){
                 main = paste("model",i," #Genes",nrow(x_s),sep =" "),
                 col = colorRampPalette(c('blue','yellow'))(1000))
 
-      x_s = subset(x, choosen_model==i)
+      x_s = subset(x, chosen_model==i)
       par(mfrow=c(1+round(length(pos_phase)/3),3))
       ba = 1
       for(kk in pos_phase){

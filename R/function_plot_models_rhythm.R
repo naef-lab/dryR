@@ -7,7 +7,7 @@
 #' @examples
 #' XYZn
 plot_models_rhythm = function(dryList,file_path_name, period=24){
-  if (length(dev.list()!=0) {dev.off()}
+  if (length(dev.list()!=0)) {dev.off()}
   t=dryList$time
   group=dryList$group
   x=dryList$results

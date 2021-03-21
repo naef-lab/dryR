@@ -17,7 +17,6 @@ Imports:
     circular,
     reshape2,
     stringr,
-    ggplot2,
     Rmisc
 Depends:
     R (>= 3.5.0),
@@ -25,6 +24,7 @@ Depends:
     S4Vectors,
     foreach,
     pheatmap,
+    ggplot2,
     plotrix
 Encoding: UTF-8
 LazyData: true

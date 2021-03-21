@@ -366,15 +366,15 @@ dry_plot = function (dryList, gene)
   if(normal==FALSE) {m$value[which(m$value<0)] = 0}
 
   gg1 = ggplot2::ggplot(d, ggplot2::aes(x=time, y=value, group=group, color=group)) +
-    geom_errorbar(aes(ymin=value-se, ymax=value+se), width=.4) +
-    geom_point(size=2, shape=19) +
-    xlab("Time (h)") +
-    ggtitle(ID) +
-    scale_x_continuous(breaks=c(0,6,12,18,24,30)) +
-    theme_bw(base_size = 10) +
-    theme(aspect.ratio = 1, panel.grid.minor=ggplot2::element_blank(), legend.position = "right") +
-    geom_line(aes(x=time, y=(value), group=group), data = m, position=position_dodge(width=0.5)) +
-    facet_wrap(~group)
+    ggplot2::geom_errorbar(aes(ymin=value-se, ymax=value+se), width=.4) +
+    ggplot2::geom_point(size=2, shape=19) +
+    ggplot2::xlab("Time (h)") +
+    ggplot2::ggtitle(ID) +
+    ggplot2::scale_x_continuous(breaks=c(0,6,12,18,24,30)) +
+    ggplot2::theme_bw(base_size = 10) +
+    ggplot2::theme(aspect.ratio = 1, panel.grid.minor=ggplot2::element_blank(), legend.position = "right") +
+    ggplot2::geom_line(aes(x=time, y=(value), group=group), data = m, position=position_dodge(width=0.5)) +
+    ggplot2::facet_wrap(~group)
 
   gg1
 }

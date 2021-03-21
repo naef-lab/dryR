@@ -49,11 +49,11 @@ dryList[["ncounts"]]    # normalized counts
 dryList[["counts"]]     # raw counts
 dryList[["cook"]]       # cook's distance for outlier detection
 
-#plot a feature of interest
-dry_plot(dryList, "feature_113")
-
 #generate a pdf with a global summary of all models
 plot_models_rhythm(dryList, "./")
+
+#plot a feature of interest
+dry_plot(dryList, "feature_113")
 ```
 
 
@@ -75,11 +75,11 @@ dryList = drylm(data,group,time)
 dryList[["results"]]    # data frame summarizing results
 dryList[["parameters"]] # coefficients: phase, amplitude and mean for each group
 
-#plot a feature of interest
-dry_plot(dryList, "feature_013")
-
 #generate a pdf with a global summary of all models
 plot_models_rhythm(dryList, "./")
+
+#plot a feature of interest
+dry_plot(dryList, "feature_013")
 ```
 
 ## DryR with a simple vector as input

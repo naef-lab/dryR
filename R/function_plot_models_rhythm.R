@@ -7,6 +7,7 @@
 #' @examples
 #' XYZn
 plot_models_rhythm = function(dryList,file_path_name, period=24){
+  if (length(dev.list()!=0) {dev.off()}
   t=dryList$time
   group=dryList$group
   x=dryList$results
@@ -54,14 +55,14 @@ plot_models_rhythm = function(dryList,file_path_name, period=24){
       x_s.m=x_s.m[,match(com.u,colnames(x_s.m))]
 
 
-      print(pheatmap(as.matrix(x_s.m),
+      pheatmap(as.matrix(x_s.m),
                cluster_cols = FALSE,
                cluster_rows = FALSE,
                 show_rownames = F ,
                 scale = "row",
                 gaps_col=which(diff(as.numeric(as.factor(cond.u)))!=0),
                 main = paste("model",i," #Genes",nrow(x_s),sep =" "),
-                col = colorRampPalette(c('blue','yellow'))(1000)))
+                col = colorRampPalette(c('blue','yellow'))(1000))
 
       x_s = subset(x, chosen_model==i)
       par(mfrow=c(1+round(length(pos_phase)/3),3))
@@ -69,7 +70,7 @@ plot_models_rhythm = function(dryList,file_path_name, period=24){
       for(kk in pos_phase){
 
         if(sum(x_s[,kk],na.rm=T) !=0){
-          print(circular_phase24H_histogram(x_s[,kk], unique(condi)[ba], period))
+          circular_phase24H_histogram(x_s[,kk], unique(condi)[ba], period)
         }
         ba = ba + 1
       }
@@ -78,7 +79,7 @@ plot_models_rhythm = function(dryList,file_path_name, period=24){
       bas=bas[bas!=0]
       la = match(bas, sum_phase)
       if (length(la) > 1) {
-        print(pairs(x_s[, pos_phase[la]], cex = 0.5))
+        pairs(x_s[, pos_phase[la]], cex = 0.5)
       }
 
     }

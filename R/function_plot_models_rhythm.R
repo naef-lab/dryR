@@ -16,7 +16,7 @@ plot_models_rhythm = function(dryList,file_path_name, period=24){
     x[,1:ncol(dryList$vsd)]=dryList$vsd
 
   }
-  pdf(file =paste0(file_path_name,'summary_heatmap_models.pdf'))
+  pdf(file =paste0(file_path_name,'summary_heatmap_models.pdf'), paper = "a4")
 
   nb = table(x[,'chosen_model'])
   nb = nb[order(-nb)]

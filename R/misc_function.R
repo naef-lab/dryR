@@ -376,6 +376,6 @@ dry_plot = function (dryList, gene)
     geom_line(aes(x=time, y=(value), group=group), data = m, position=position_dodge(width=0.5)) +
     facet_wrap(~group)
 
-  print(gg1)
+  gg1
 }
 

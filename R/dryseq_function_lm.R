@@ -31,7 +31,7 @@
 #'      In a second iteration step, drylm set the coefficient α and β to the values of the selected model in the first regression.
 #'      drylm then defined different models for the mean coefficient with differing or shared means between groups. Each model is solved using linear regression and each gene was assigned to a preferred model based on the BICW as described above for the first iteration.
 
-drylm=function(data,group,time,period=24,sample_name=colnames(data),batch=rep("A",length(sample_name)),n.cores=round(parallel::detectCores()*.6,0) ){
+drylm=function(data,group,time,period=24,sample_name=colnames(data),batch=rep("A",length(sample_name)),n.cores=1 ){
 
   doParallel::registerDoParallel(cores=n.cores)
   #update

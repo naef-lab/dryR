@@ -104,4 +104,4 @@ dry_plot(dryList, "X1")
 ```
 
 ## Help
-A documentation using `?dryseq` pr `?drylm` function is available. 
+A documentation using `?dryseq` or `?drylm` function is available. 

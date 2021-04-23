@@ -11,7 +11,7 @@ drylm(
   period = 24,
   sample_name = colnames(data),
   batch = rep("A", length(sample_name)),
-  n.cores = round(detectCores() * 0.6, 0)
+  n.cores = 1
 )
 }
 \arguments{

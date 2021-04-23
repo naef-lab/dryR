@@ -11,7 +11,7 @@ dryseq(
   period = 24,
   sample_name = colnames(countData),
   batch = rep("A", length(sample_name)),
-  n.cores = round(detectCores() * 0.6, 0)
+  n.cores = round(parallel::detectCores() * 0.6, 0)
 )
 }
 \arguments{
@@ -54,7 +54,7 @@ DryR assesses rhythmicity and mean differences of gene expression in RNA-Seq cou
      Models refined to have either zero (non-rhythmic pattern) or non-zero (rhythmic pattern) α and β coefficients for each analyzed group. Moreover, for some models the values of α and β can be also shared within any combination of all groups
      The coefficients α and β were used to calculate the phase (arctan(α/β)) and amplitude (log2-fold change peak-to-trough; 2sqrt(α^2+β^2) ) of a gene.
      Bayesian information criterion (BIC) based model selection was employed to account for model complexity using the following formula:
-     \cr \cr   BIC_j = ln(n)k - 2ln(L̂_ĵ)\cr \cr
+     \cr \cr   BIC_j = ln(n)k - 2ln(L̂_ĵ)\cr \cr
      L̂ is defined as the log-likelihood of the model j from the regression, n is the number of data points and k is the number of parameters.
      To assess the confidence of the selected model j we calculated the Schwarz weight (BICW):
      \cr \cr   BICW_j = e^(0.5ΔBIC_j)\ sum(e^0.5 ΔBIC_m), with ΔBIC_j - BIC_j - BIC_m*\cr \cr

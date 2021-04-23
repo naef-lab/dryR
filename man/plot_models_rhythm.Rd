@@ -4,10 +4,10 @@
 \alias{plot_models_rhythm}
 \title{Visualization of dryseq results}
 \usage{
-plot_models_rhythm(DF, file_path_name, time, group, period = 24)
+plot_models_rhythm(dryList, file_path_name, period = 24)
 }
 \arguments{
-\item{DF}{results from dryseq}
+\item{dryList}{from dryseq output}
 
 \item{file_path_name}{folder to store output}
 }

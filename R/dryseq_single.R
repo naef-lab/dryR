@@ -1,3 +1,4 @@
+#' @export
 dryseq_single=function(countData, 
                 sample_name=names(countData),
                 group, 

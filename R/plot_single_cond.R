@@ -1,3 +1,4 @@
+#' @export
 plot_single_cond=function(out,gene_name){
   out.ncount = out$results[,1:(ncol(out$results)-7)]
   x=out.ncount[gene_name,]

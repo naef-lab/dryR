@@ -65,6 +65,7 @@ To detect rhythmic gene expression in RNA-Seq data with only one condition, we i
 ```
 library("dryR")
 
+# prepare arguments for a one condition scenario
 sel = grep("cond_1", simData[["group"]])
 countData_single = simData[["countData"]][,sel]
 group_single     = simData[["group"]][sel]

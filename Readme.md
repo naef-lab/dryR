@@ -65,20 +65,17 @@ To detect rhythmic gene expression in RNA-Seq data with only one condition, we i
 ```
 library("dryR")
 
-countData_single = simData[["countData"]][,grep("cond_1", group)]
-group_single     = simData[["group"]][grep("cond_1", group)]
-time_single      = simData[["time"]][grep("cond_1", group)]
+sel = grep("cond_1", simData[["group"]])
+countData_single = simData[["countData"]][,sel]
+group_single     = simData[["group"]][sel]
+time_single      = simData[["time"]][sel]
 
 # run the analysis for count data.
 
-dryList   = dryseq _single(countData_single,group_single,time_single)
+dryList   = dryseq_single(countData_single,group_single,time_single)
 
 # explore the results
 dryList[["results"]]    # data frame summarizing results
-dryList[["parameters"]] # coefficients: phase, amplitude and mean for each group
-dryList[["ncounts"]]    # normalized counts
-dryList[["counts"]]     # raw counts
-dryList[["cook"]]       # cook's distance for outlier detection
 
 #plot a feature of interest
 plot_single_cond(dryList, "feature_004")

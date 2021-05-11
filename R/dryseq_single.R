@@ -1,10 +1,10 @@
 #' This function performs rhythmicity analysis for one condition
 #' @export
 dryseq_single=function(countData,
-                sample_name=names(countData),
                 group,
-                single,
                 time,
+                single = group[1],
+                sample_name=names(countData),
                 period=24){
 
   sel =  group %in% single

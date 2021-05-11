@@ -71,7 +71,6 @@ group_single     = simData[["group"]][sel]
 time_single      = simData[["time"]][sel]
 
 # run the analysis for count data.
-
 dryList   = dryseq_single(countData_single,group_single,time_single)
 
 # explore the results

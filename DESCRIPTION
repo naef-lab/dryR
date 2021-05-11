@@ -17,11 +17,11 @@ Imports:
     circular,
     reshape2,
     stringr,
-    ggplot2,
     Rmisc
 Depends:
     R (>= 3.5.0),
     DESeq2,
+    ggplot2,
     S4Vectors,
     foreach,
     pheatmap,

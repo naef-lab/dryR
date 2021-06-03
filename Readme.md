@@ -49,7 +49,7 @@ dryList[["ncounts"]]     # normalized counts
 dryList[["counts"]]      # raw counts
 dryList[["cook"]]        # cook's distance for outlier detection
 dryList[["BICW_rhythm"]] # BICW for each rhythmic model
-dryList[["BICW_mean"]]   # BICH for each mean model
+dryList[["BICW_mean"]]   # BICW for each mean model
 
 # generate a pdf with a global summary of all models
 plot_models_rhythm(dryList, "./")

@@ -369,6 +369,7 @@ dry_plot = function (dryList, gene)
     geom_errorbar(aes(ymin=value-se, ymax=value+se), width=.4) +
     geom_point(size=2, shape=19) +
     xlab("Time (h)") +
+    ylab("Log2 norm. counts") +
     ggtitle(ID) +
     scale_x_continuous(breaks=c(0,6,12,18,24,30)) +
     theme_bw(base_size = 10) +

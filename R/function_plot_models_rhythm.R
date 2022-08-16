@@ -78,7 +78,7 @@ plot_models_rhythm = function(dryList,file_path_name, period=24){
       
       print(gridExtra::grid.arrange(grobs = gg))
  
-      par(mfrow=c(1+round(length(pos_phase)/3),3))
+#      par(mfrow=c(1+round(length(pos_phase)/3),3))
 
       bas = unique(sum_phase)
       bas=bas[bas!=0]

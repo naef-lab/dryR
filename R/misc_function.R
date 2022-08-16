@@ -28,14 +28,36 @@ make_circ_coord = function(t,x,ttot) {
   list(angles=a,heights=h)
 }
 #####################################
+#circular_phase24H_histogram = function(x,name,ttot){
+#  color_hist = rgb(0.6,0,0.2)
+#  br=0:ttot
+#  h=hist(x, br=br,plot=F)
+#  co=make_circ_coord(br[-1],h$counts,ttot)
+#  radial.plot(co$heights,co$angle,br[-1]-br[2],
+#              clockwise=T,start=pi/2,main=paste("",name),
+#              rp.type='p',poly.col=color_hist, xlab = "",ylab = "", show.grid.labels=0)
+#}
+
 circular_phase24H_histogram = function(x,name,ttot){
-  color_hist = rgb(0.6,0,0.2)
   br=0:ttot
   h=hist(x, br=br,plot=F)
-  co=make_circ_coord(br[-1],h$counts,ttot)
-  radial.plot(co$heights,co$angle,br[-1]-br[2],
-              clockwise=T,start=pi/2,main=paste("",name),
-              rp.type='p',poly.col=color_hist, xlab = "",ylab = "", show.grid.labels=0)
+  df = data.frame(x= as.numeric(h$breaks[-1]%%24), y= h$counts)
+  
+  ggplot(df, aes(x=x, y=y)) + 
+    geom_bar(stat='identity') + 
+    coord_polar(start = -0.261799/2, direction=1) +
+    scale_x_continuous(breaks = seq(0, 24, 1)) +
+    ylab("") +
+    xlab("") +
+    theme_bw() +
+    ggtitle(paste("", name)) +
+    theme(aspect.ratio = 1, 
+          axis.text=element_text(size=12), 
+          panel.grid.minor = element_blank(), 
+          panel.border = element_blank(), 
+          axis.text.y = element_blank(), 
+          axis.ticks = element_blank(), 
+          plot.title = element_text(hjust = 0.5))
 }
 #####################################
 compute_BICW = function(x){

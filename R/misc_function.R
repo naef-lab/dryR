@@ -37,7 +37,6 @@ make_circ_coord = function(t,x,ttot) {
 #              clockwise=T,start=pi/2,main=paste("",name),
 #              rp.type='p',poly.col=color_hist, xlab = "",ylab = "", show.grid.labels=0)
 #}
-
 circular_phase24H_histogram = function(x,name,ttot){
   br=0:ttot
   h=hist(x, br=br,plot=F)
@@ -52,7 +51,7 @@ circular_phase24H_histogram = function(x,name,ttot){
     theme_bw() +
     ggtitle(paste("", name)) +
     theme(aspect.ratio = 1, 
-          axis.text=element_text(size=12), 
+          axis.text=element_text(size=8), 
           panel.grid.minor = element_blank(), 
           panel.border = element_blank(), 
           axis.text.y = element_blank(), 

@@ -76,7 +76,7 @@ plot_models_rhythm = function(dryList,file_path_name, period=24){
         }
       }
       
-      if(length(gg)>0){gridExtra::grid.arrange(grobs = gg, ncol = 3, nrow = 1+round(length(pos_phase)/3))}
+      if(length(gg)>0){gridExtra::grid.arrange(grobs = gg, ncol = 4, nrow = 1+round(length(pos_phase)/4))}
       
       bas = unique(sum_phase)
       bas=bas[bas!=0]

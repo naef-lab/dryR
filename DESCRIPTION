@@ -17,7 +17,8 @@ Imports:
     circular,
     reshape2,
     stringr,
-    Rmisc
+    Rmisc,
+    gridExtra
 Depends:
     R (>= 3.5.0),
     DESeq2,

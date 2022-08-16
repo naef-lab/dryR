@@ -65,15 +65,20 @@ plot_models_rhythm = function(dryList,file_path_name, period=24){
                 col = colorRampPalette(c('blue','yellow'))(1000))
 
       x_s = subset(x, chosen_model==i)
-      par(mfrow=c(1+round(length(pos_phase)/3),3))
       ba = 1
+      gg = list()
+
       for(kk in pos_phase){
 
         if(sum(x_s[,kk],na.rm=T) !=0){
-          circular_phase24H_histogram(x_s[,kk], unique(condi)[ba], period)
+          gg[[ba]] = circular_phase24H_histogram(x_s[,kk], unique(condi)[ba], period)
         }
         ba = ba + 1
       }
+      
+      print(gridExtra::grid.arrange(grobs = gg))
+ 
+      par(mfrow=c(1+round(length(pos_phase)/3),3))
 
       bas = unique(sum_phase)
       bas=bas[bas!=0]

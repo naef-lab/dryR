@@ -329,7 +329,7 @@ dry_plot = function (dryList, gene)
 
   ID = rownames(dryList[["results"]] )[grep(paste0('^',gene,'$'),rownames(dryList[["results"]] ))]
 
-  print(ID)
+  #print(ID)
 
   d = vsd[ID, ]
   d = reshape2::melt(d)

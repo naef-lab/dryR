@@ -320,12 +320,10 @@ annotate_matrix = function(m,group){
 #####################################
 dry_plot = function (dryList, gene)
 {
-
-
   normal = FALSE
   if("ncounts" %in% names(dryList)){vsd        = log2(dryList[["ncounts"]]+1)}
   if("values" %in% names(dryList)){vsd         = dryList[["values"]]
-                                    normal = T}
+                                   normal = T}
 
   parameters = dryList[["parameters"]][,grep("^mean|^a_|^b_|^amp|^phase|^relamp",colnames(dryList[["parameters"]]))]
 
@@ -360,7 +358,6 @@ dry_plot = function (dryList, gene)
   fit_values = function (x,n)
   { as.numeric((fit_d_0[n] + fit_d_1[n]*cos(2*pi*x/24)  + fit_d_2[n]*sin(2*pi*x/24)))  }
 
-
   for (u in 1:length(unique(d$group))){
     m[,u+1]  = NA
     m[,u+1]  = apply(dd,1, fit_values,u)
@@ -370,7 +367,7 @@ dry_plot = function (dryList, gene)
 
   colnames(m) =  unique(dryList[["group"]])
 
-  m =  reshape2::melt(m)
+  m =  reshape2::melt(m, , id.vars = NULL)
   m$time = rep(v, length(unique(d$group)))
 
   colnames(m)       = c("group","value","time")

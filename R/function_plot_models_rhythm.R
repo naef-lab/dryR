@@ -71,9 +71,9 @@ plot_models_rhythm = function(dryList,file_path_name, period=24){
       for(kk in pos_phase){
         
         if(sum(x_s[,kk],na.rm=T) !=0){
-          gg[[ba]] = circular_phase24H_histogram(x_s[,kk], unique(condi)[ba], period)
-          ba = ba + 1
+          gg[[ba]] = circular_phase24H_histogram(x_s[,kk], condi[ba], period)
         }
+      ba = ba + 1
       }
       
       if(length(gg)>0){gridExtra::grid.arrange(grobs = gg, ncol = 4, nrow = 1+round(length(pos_phase)/4))}

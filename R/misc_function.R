@@ -28,15 +28,6 @@ make_circ_coord = function(t,x,ttot) {
   list(angles=a,heights=h)
 }
 #####################################
-#circular_phase24H_histogram = function(x,name,ttot){
-#  color_hist = rgb(0.6,0,0.2)
-#  br=0:ttot
-#  h=hist(x, br=br,plot=F)
-#  co=make_circ_coord(br[-1],h$counts,ttot)
-#  radial.plot(co$heights,co$angle,br[-1]-br[2],
-#              clockwise=T,start=pi/2,main=paste("",name),
-#              rp.type='p',poly.col=color_hist, xlab = "",ylab = "", show.grid.labels=0)
-#}
 circular_phase24H_histogram = function(x,name,ttot){
   br=0:ttot
   h=hist(x, br=br,plot=F)

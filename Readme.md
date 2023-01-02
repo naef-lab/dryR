@@ -40,6 +40,10 @@ countData = simData[["countData"]]
 group     = simData[["group"]]
 time      = simData[["time"]]
 
+# prefilter
+keep <- rowSums(countData) > 0
+countData <- countData[keep,]
+
 # run the analysis for count data (e.g. RNA-Seq data)
 dryList   = dryseq(countData,group,time)
 

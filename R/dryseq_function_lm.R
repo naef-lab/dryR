@@ -73,7 +73,7 @@ drylm=function(data,group,time,period=24,sample_name=colnames(data),batch=rep("A
     model_b = as.matrix(model.matrix(~  batch),contrasts.arg=NULL)[,2:length(unique(batch)),drop=F]
     colnames(model_b)=paste0("BATCH_",unique(batch)[-1])
     models = lapply(models, function(l) cbind(model_b,l))
-    models = lapply(models, function(l) l[,c(grep("u",colnames(l)),grep("BATCH",colnames(l)),grep("a|b",colnames(l)))]   )
+    models = lapply(models, function(l) l[,c(grep("^u",colnames(l)),grep("^BATCH",colnames(l)),grep("^a|^b",colnames(l)))]   )
   }
 
   fit = parallel::mclapply(split(data, rownames(data)),

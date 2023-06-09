@@ -31,12 +31,12 @@ make_circ_coord = function(t,x,ttot) {
 circular_phase24H_histogram = function(x,name,ttot){
   br=0:ttot
   h=hist(x, br=br,plot=F)
-  df = data.frame(x= as.numeric(h$breaks[-1]%%24), y= h$counts)
+  df = data.frame(x= as.numeric(h$breaks[-1]%%ttot), y= h$counts)
   
   ggplot(df, aes(x=x, y=y)) + 
     geom_bar(stat='identity') + 
     coord_polar(start = -0.261799/2, direction=1) +
-    scale_x_continuous(breaks = seq(0, 24, 1)) +
+    scale_x_continuous(breaks = seq(0, ttot, round(ttot/24,0))) +
     ylab("") +
     xlab("") +
     theme_bw() +
@@ -49,6 +49,8 @@ circular_phase24H_histogram = function(x,name,ttot){
           axis.ticks = element_blank(), 
           plot.title = element_text(hjust = 0.5))
 }
+
+
 #####################################
 compute_BICW = function(x){
   x = as.numeric(x)

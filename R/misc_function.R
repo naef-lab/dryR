@@ -320,74 +320,74 @@ annotate_matrix = function(m,group){
 }
 
 #####################################
-dry_plot = function (dryList, gene)
+dry_plot = function (dryList, gene, period=24)
 {
   normal = FALSE
   if("ncounts" %in% names(dryList)){vsd        = log2(dryList[["ncounts"]]+1)}
   if("values" %in% names(dryList)){vsd         = dryList[["values"]]
-                                   normal = T}
-
+  normal = T}
+  
   parameters = dryList[["parameters"]][,grep("^mean|^a_|^b_|^amp|^phase|^relamp",colnames(dryList[["parameters"]]))]
-
+  
   ID = rownames(dryList[["results"]] )[grep(paste0('^',gene,'$'),rownames(dryList[["results"]] ))]
-
+  
   #print(ID)
-
+  
   d = vsd[ID, ]
   d = reshape2::melt(d)
-
+  
   d$group            = dryList[["group"]]
-
+  
   d$time            = as.numeric(dryList[["time"]])
-  d$time            = d$time%%24
-
+  d$time            = d$time%%period
+  
   suppressWarnings({ d <- Rmisc::summarySE(d, measurevar="value", groupvars=c("time","group")) })
-
-  v = seq(0,24,1)
+  
+  v = seq(0,period,round(period/24,0))
   fit_d_0 = parameters[which(rownames(parameters)==ID),grep("mean",colnames(parameters))] # intercept
   fit_d_1 = parameters[which(rownames(parameters)==ID),grep("a_",colnames(parameters))] # coefficient a
   fit_d_2 = parameters[which(rownames(parameters)==ID),grep("^b_",colnames(parameters))] # coefficient b
-
+  
   fit_d_0[is.na(fit_d_0)] = 0
   fit_d_1[is.na(fit_d_1)] = 0
   fit_d_2[is.na(fit_d_2)] = 0
-
+  
   m = data.frame(v)
-
+  
   dd = data.frame(v)
   dd$v = v
-
+  
   fit_values = function (x,n)
-  { as.numeric((fit_d_0[n] + fit_d_1[n]*cos(2*pi*x/24)  + fit_d_2[n]*sin(2*pi*x/24)))  }
-
+  { as.numeric((fit_d_0[n] + fit_d_1[n]*cos(2*pi*x/period)  + fit_d_2[n]*sin(2*pi*x/period)))  }
+  
   for (u in 1:length(unique(d$group))){
     m[,u+1]  = NA
     m[,u+1]  = apply(dd,1, fit_values,u)
   }
-
+  
   m = m[,-1]
-
+  
   colnames(m) =  unique(dryList[["group"]])
-
+  
   m =  reshape2::melt(m, , id.vars = NULL)
   m$time = rep(v, length(unique(d$group)))
-
+  
   colnames(m)       = c("group","value","time")
-
+  
   if(normal==FALSE) {m$value[which(m$value<0)] = 0}
-
+  
   gg1 = ggplot(d, aes(x=time, y=value, group=group, color=group)) +
     geom_errorbar(aes(ymin=value-se, ymax=value+se), width=.4) +
     geom_point(size=2, shape=19) +
     xlab("Time (h)") +
     ylab("Log2 normalized counts") +
     ggtitle(ID) +
-    scale_x_continuous(breaks=c(0,6,12,18,24,30)) +
+    scale_x_continuous(breaks=seq(0,period+6,6)) +
     theme_bw(base_size = 10) +
     theme(aspect.ratio = 1, panel.grid.minor=element_blank(), legend.position = "right") +
     geom_line(aes(x=time, y=(value), group=group), data = m, position=position_dodge(width=0.5)) +
     facet_wrap(~group)
-
+  
   gg1
 }
 

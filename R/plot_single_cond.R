@@ -21,7 +21,7 @@ plot_single_cond=function(out,gene_name){
     geom_line(data=df.2,aes(x=t.2,y=fit),alpha=.8) +
     theme_bw() + theme(aspect.ratio=1,axis.text=element_text(size = 12),plot.title = element_text(size=10)) +
     xlab("Time") + ylab("Log2 normalized counts") +
-    ggtitle(paste(gene_name,"\n","adjpval:",format(out$results[gene_name,'padj'],scientific=T,digits = 3),", phase:",round(out$results[gene_name,'phase'],2),
+    ggtitle(paste(gene_name,"\n","adj_pval:",format(out$results[gene_name,'padj'],scientific=T,digits = 3),", phase:",round(out$results[gene_name,'phase'],2),
                   ", amp:",round(out$results[gene_name,'amp'],2)))
   print(g1)
 }
@@ -48,7 +48,7 @@ plot_single_cond_lm = function (out, gene_name)
                                                                                                                   aes(x = t.2, y = fit), alpha = 0.8) + theme_bw() + theme(aspect.ratio = 1, 
                                                                                                                                                                            axis.text = element_text(size = 12), plot.title = element_text(size = 10)) + 
     xlab("Time") + ylab("Log2 normalized counts") + ggtitle(paste(gene_name, 
-                                                                  "\n", "adjpval:", format(out$results[gene_name, "padj"], 
+                                                                  "\n", "adj_pval:", format(out$results[gene_name, "padj"], 
                                                                                            scientific = T, digits = 3), ", phase:", round(out$results[gene_name, 
                                                                                                                                                       "phase"], 2), ", amp:", round(out$results[gene_name, 
                                                                                                                                                                                                 "amp"], 2)))

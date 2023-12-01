@@ -116,6 +116,31 @@ plot_models_rhythm(dryList, "./")
 dry_plot(dryList, "feature_013")
 ```
 
+
+### Normally distributed data with one condition
+To detect rhythmicity in normally disributed data with only one condition, we implemented the function `f_24`. 
+
+```
+library("dryR")
+
+# prepare arguments for a one condition scenario
+simData_norm = simData
+simData[["normData"]] = log(simData[["countData"]]+1)
+sel = grep("cond_1", simData[["group"]])
+normData_single = simData[["normData"]][,sel]
+time_single      = simData[["time"]][sel]
+
+# run the analysis for count data.
+dryList   = f_24(normData_single,time_single)
+
+# explore the results
+dryList[["results"]]    # data frame summarizing results
+
+# plot a feature of interest
+plot_single_cond_lm(dryList, "feature_004")
+```
+
+
 ### DryR with a simple vector as input
 You can run `drylm` with a simple vector that contains data from a time series of multiple groups. 
 

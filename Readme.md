@@ -63,8 +63,11 @@ plot_models_rhythm(dryList, "./")
 dry_plot(dryList, "feature_113")
 ```
 
+## Decision Tree for Various Scenarios
+The dryR package is equipped to handle a variety of dataset types and experimental designs extending beyond RNA-Seq data with multiple conditions/groups (see example above). The decision tree provided below serves as a guide for selecting the appropriate function to use. For example code, refer to the chapter "Non-standard Scenarios."
+![image](https://github.com/naef-lab/dryR/assets/64013365/a365dce5-16ea-4059-a028-7f60004fda99)
 
-## Non-standard scenarios
+## Non-standard Scenarios
 
 ### Rhythmicity detection in RNA-Seq datasets with one condition
 To detect rhythmic gene expression in RNA-Seq data with only one condition, we implemented the function `dryseq_single`. 

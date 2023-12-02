@@ -127,8 +127,8 @@ library("dryR")
 simData_norm = simData
 simData[["normData"]] = log(simData[["countData"]]+1)
 sel = grep("cond_1", simData[["group"]])
-normData_single = simData[["normData"]][,sel]
-time_single      = simData[["time"]][sel]
+normData_single       = simData[["normData"]][,sel]
+time_single           = simData[["time"]][sel]
 
 # run the analysis for count data.
 dryList   = f_24(normData_single,time_single)

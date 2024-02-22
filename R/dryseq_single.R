@@ -43,7 +43,7 @@ dryseq_single=function(countData,
 
   phase=period/(2*pi)*atan2(res$s1,res$c1)
   phase=phase%%period
-  amp =2*sqrt(res$s1^2+res$s1^2)
+  amp =2*sqrt(res$s1^2+res$c1^2)
 
   res=data.frame(res,phase,amp)
 

@@ -8,51 +8,64 @@
 # @return A vector with number of timepoints, mean, amplitude, relative amplitude, phase, and p-value of rhythmicity
 # 
 f24_R2_cycling <- function(x, t = 2 * (0:(length(x) - 1)), period = 24, offset = 0) {
-  valid_data_indices = which(!is.na(x))
-  x = x[valid_data_indices]
-  t = t[valid_data_indices]
-  n = length(x)
-  
+  # remove NAs
+  valid <- !is.na(x)
+  x <- x[valid]
+  t <- t[valid]
+  n <- length(x)
+  nb.timepoints <- length(valid)
+
+  # handle insufficient data
   if (n < 4) {
-    return(c(Intercept = mean(x), amp = NA, phase = NA, s1 = NA, c1 = NA, pval = NA))
+    stats <- c(
+      nb.timepoints = nb.timepoints,
+      mean          = if (n > 0) mean(x) else NA,
+      amp           = NA,
+      relamp        = NA,
+      phase         = NA,
+      pval          = NA,
+      c1            = NA,
+      s1            = NA
+    )
+    return(stats)
   }
-  
-  x_mean = mean(x)
-  x_var = var(x)
-  cos_component = cos(2 * pi * t / period)
-  sin_component = sin(2 * pi * t / period)
-  A = mean(x * cos_component) - x_mean * mean(cos_component)
-  B = mean(x * sin_component) - x_mean * mean(sin_component)
-  cos_sq_mean = mean(cos_component^2)
-  sin_sq_mean = mean(sin_component^2)
-  cos_sin_mean = mean(cos_component * sin_component)
-  cos_mean = mean(cos_component)
-  sin_mean = mean(sin_component)
-  
-  c1 = cos_sq_mean - cos_mean^2
-  c2 = cos_sin_mean - cos_mean * sin_mean
-  c3 = sin_sq_mean - sin_mean^2
-  b = (A * c2 - B * c1) / (c2^2 - c1 * c3)
-  a = (A - b * c2) / c1
-  mu = x_mean - a * cos_mean - b * sin_mean
-  
-  x_hat = mu + a * cos_component + b * sin_component
-  residual_var = var(x - x_hat)
-  
-  if (is.na(a) || is.na(b)) {
-    return(c(Intercept = x_mean, amp = NA, phase = NA, s1 = NA, c1 = NA, pval = NA))
-  }
-  
-  p = 3
-  R2 = ifelse(x_var > 0, 1 - residual_var / x_var, 0)
-  amp = max(x) - min(x)
-  phase = period / (2 * pi) * atan2(b, a)
-  phase = (phase + offset) %% period
-  phase = ifelse(phase < 0, phase + period, phase)
-  phase = ifelse(phase > period, phase - period, phase)
-  pval = pbeta(R2, (p - 1) / 2, (n - p) / 2, lower.tail = FALSE, log.p = FALSE)
-  
-  return(c(Intercept = x_mean, amp = 2 * sqrt(a^2 + b^2), phase = phase, s1 = b, c1 = a, pval = pval))
+
+  # compute sine/cosine terms
+  c <- cos(2 * pi * t / period)
+  s <- sin(2 * pi * t / period)
+
+  # regression coefficients
+  A  <- cov(x, c)
+  B  <- cov(x, s)
+  C1 <- var(c)
+  C2 <- cov(c, s)
+  C3 <- var(s)
+
+  b  <- (A * C2 - B * C1) / (C2^2 - C1 * C3)
+  a  <- (A - b * C2) / C1
+  mu <- mean(x) - a * mean(c) - b * mean(s)
+
+  x_hat <- mu + a * c + b * s
+  R2    <- if (var(x) > 0) 1 - var(x - x_hat) / var(x) else NA
+
+  # amplitude and phase
+  amp    <- 2 * sqrt(a^2 + b^2)
+  phi    <- (period / (2 * pi)) * atan2(b, a)
+  phase  <- (phi %% period + offset) %% period
+
+  # p-value from beta distribution
+  pval <- pbeta(R2, (3 - 1) / 2, (n - 3) / 2, lower.tail = FALSE)
+
+  c(
+    nb.timepoints = nb.timepoints,
+    mean          = mean(x),
+    amp           = amp,
+    relamp        = amp / mu,
+    phase         = phase,
+    pval          = pval,
+    c1            = a,
+    s1            = b
+  )
 }
 
 
@@ -64,24 +77,31 @@ f24_R2_cycling <- function(x, t = 2 * (0:(length(x) - 1)), period = 24, offset =
 #' @param sample_name	vector containing sample names. Default: colnames are sample names.
 #' @return a list that contains the following data.frames/vectors: results (summary of results), parameters (rhythmic parameters), time ((timepoints), period (period length)
 
-f_24 <- function(data, time, period = 24, sample_name = names(data)) {
-  
+f_24 <- function(data, time, period = 24, sample_name = colnames(data)) {
+  # ensure data is matrix
   if (is.vector(data)) {
-    data = rbind(data, data)
-    rownames(data) = c("X1", "X2")
+    data <- rbind(data, data)
+    rownames(data) <- c("X1", "X2")
   }
-  
-  res_tmp = apply(data, 1, function(x) f24_R2_cycling(x, t = time, period = period))
-  res = t(res_tmp)
-  padj = p.adjust(res[, "pval"], method = "BH")
-  res_complete = cbind(res, padj)
-  colnames(res_complete)[7] = "padj"
-  
-  global_df = as.data.frame(cbind(data, res_complete))
-  
-  out = list(time = time, period = period, results = global_df, parameters = res_complete)
-  
-  message("finished!")
-  
+
+  # apply cycling test per row
+  results_list <- apply(data, 1, f24_R2_cycling, t = time, period = period)
+  results <- t(results_list)
+
+  # adjust p-values
+  results[, "padj"] <- p.adjust(results[, "pval"], method = "BH")
+
+  # combine with original data
+  full_table <- data.frame(data, results)
+  colnames(full_table)[ncol(full_table)] <- "padj"
+
+  out <- list(
+    time       = time,
+    period     = period,
+    results    = full_table,
+    parameters = results
+  )
+
+  message("f_24: analysis complete")
   return(out)
 }

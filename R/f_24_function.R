@@ -76,32 +76,22 @@ f24_R2_cycling <- function(x, t = 2 * (0:(length(x) - 1)), period = 24, offset =
 #' @param period	numeric value to indicate period length of the oscillation. Default: period = 24 h.
 #' @param sample_name	vector containing sample names. Default: colnames are sample names.
 #' @return a list that contains the following data.frames/vectors: results (summary of results), parameters (rhythmic parameters), time ((timepoints), period (period length)
-
-f_24 <- function(data, time, period = 24, sample_name = colnames(data)) {
-  # ensure data is matrix
+#
+f_24 = function (data, time, period = 24, sample_name = names(data))
+{
   if (is.vector(data)) {
-    data <- rbind(data, data)
-    rownames(data) <- c("X1", "X2")
+    data = rbind(data, data)
+    rownames(data) = c("X1", "X2")
   }
-
-  # apply cycling test per row
-  results_list <- apply(data, 1, f24_R2_cycling, t = time, period = period)
-  results <- t(results_list)
-
-  # adjust p-values
-  results[, "padj"] <- p.adjust(results[, "pval"], method = "BH")
-
-  # combine with original data
-  full_table <- data.frame(data, results)
-  colnames(full_table)[ncol(full_table)] <- "padj"
-
-  out <- list(
-    time       = time,
-    period     = period,
-    results    = full_table,
-    parameters = results
-  )
-
-  message("f_24: analysis complete")
+  res_tmp = apply(data, 1, function(x) f24_R2_cycling(x, t = time,
+                                                      period = period))
+  res = t(res_tmp)
+  padj = p.adjust(res[, "pval"], method = "BH")
+  res_complete = cbind(res, padj)
+  colnames(res_complete)[ncol(res_complete)] = "padj"
+  global_df = as.data.frame(cbind(data, res_complete))
+  out = list(time = time, period = period, results = global_df,
+             parameters = res_complete)
+  message("finished!")
   return(out)
 }

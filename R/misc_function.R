@@ -320,75 +320,106 @@ annotate_matrix = function(m,group){
 }
 
 #####################################
-dry_plot = function (dryList, gene, period=24)
-{
+#' Plot Gene Expression with Cosinor Fitting
+#'
+#' @param dryList A list containing normalized counts/values, group info, time points, and dryR parameters.
+#' @param gene Character string of the gene ID to plot.
+#' @param period Numeric value defining the period of the rhythm (default is 24).
+#' @param fold Logical. If TRUE, folds multi-day data into a single cycle (0 to period). 
+#'             If FALSE, plots the full time series. Default is TRUE.
+#'
+#' @return A ggplot object showing mean values, error bars, and the fitted rhythmic curve.
+#' @export
+dry_plot <- function(dryList, gene, period = 24, fold = TRUE) {
   normal = FALSE
-  if("ncounts" %in% names(dryList)){vsd        = log2(dryList[["ncounts"]]+1)}
-  if("values" %in% names(dryList)){vsd         = dryList[["values"]]
-  normal = T}
   
-  parameters = dryList[["parameters"]][,grep("^mean|^a_|^b_|^amp|^phase|^relamp",colnames(dryList[["parameters"]]))]
+  # 1. Data Extraction
+  if ("ncounts" %in% names(dryList)) {
+    vsd = log2(dryList[["ncounts"]] + 1)
+  }
+  if ("values" %in% names(dryList)) {
+    vsd = dryList[["values"]]
+    normal = TRUE
+  }
   
-  ID = rownames(dryList[["results"]] )[grep(paste0('^',gene,'$'),rownames(dryList[["results"]] ))]
+  parameters = dryList[["parameters"]][, grep("^mean|^a_|^b_|^amp|^phase|^relamp", 
+                                             colnames(dryList[["parameters"]]))]
   
-  #print(ID)
+  ID = rownames(dryList[["results"]])[grep(paste0("^", gene, "$"), rownames(dryList[["results"]]))]
+  if(length(ID) == 0) stop(paste("Gene ID", gene, "not found in dryList."))
   
-  d = vsd[ID, ]
+  # 2. Prepare Data Points
+  d = vsd[ID, , drop = FALSE]
   d = reshape2::melt(d)
+  d$group = dryList[["group"]]
+  d$time = as.numeric(dryList[["time"]])
   
-  d$group            = dryList[["group"]]
+  # Determine plot limit: Round UP to the nearest full period
+  raw_max = max(d$time, na.rm = TRUE)
+  num_cycles = ceiling(raw_max / period)
+  full_duration = num_cycles * period
   
-  d$time            = as.numeric(dryList[["time"]])
-  d$time            = d$time%%period
+  if (fold) {
+    d$time = d$time %% period
+    max_plot_time = period
+  } else {
+    max_plot_time = full_duration
+  }
   
-  suppressWarnings({ d <- Rmisc::summarySE(d, measurevar="value", groupvars=c("time","group")) })
+  suppressWarnings({
+    d <- Rmisc::summarySE(d, measurevar = "value", groupvars = c("time", "group"))
+  })
   
-  v = seq(0,period,round(period/24,0))
-  fit_d_0 = parameters[which(rownames(parameters)==ID),grep("mean",colnames(parameters))] # intercept
-  fit_d_1 = parameters[which(rownames(parameters)==ID),grep("a_",colnames(parameters))] # coefficient a
-  fit_d_2 = parameters[which(rownames(parameters)==ID),grep("^b_",colnames(parameters))] # coefficient b
+  # 3. Generate Smooth Fit Curve
+  v = seq(0, max_plot_time, length.out = 500)
+  
+  fit_d_0 = parameters[which(rownames(parameters) == ID), grep("mean", colnames(parameters))]
+  fit_d_1 = parameters[which(rownames(parameters) == ID), grep("a_", colnames(parameters))]
+  fit_d_2 = parameters[which(rownames(parameters) == ID), grep("^b_", colnames(parameters))]
   
   fit_d_0[is.na(fit_d_0)] = 0
   fit_d_1[is.na(fit_d_1)] = 0
   fit_d_2[is.na(fit_d_2)] = 0
   
-  m = data.frame(v)
-  
-  dd = data.frame(v)
-  dd$v = v
-  
-  fit_values = function (x,n)
-  { as.numeric((fit_d_0[n] + fit_d_1[n]*cos(2*pi*x/period)  + fit_d_2[n]*sin(2*pi*x/period)))  }
-  
-  for (u in 1:length(unique(d$group))){
-    m[,u+1]  = NA
-    m[,u+1]  = apply(dd,1, fit_values,u)
+  fit_values = function(x, n) {
+    as.numeric((fit_d_0[n] + 
+                fit_d_1[n] * cos(2 * pi * x / period) + 
+                fit_d_2[n] * sin(2 * pi * x / period)))
   }
   
-  m = m[,-1]
+  m = data.frame(v = v)
+  groups = unique(d$group)
+  for (u in 1:length(groups)) {
+    m[, u + 1] = sapply(v, fit_values, u)
+  }
   
-  colnames(m) =  unique(dryList[["group"]])
+  m = m[, -1, drop = FALSE]
+  colnames(m) = groups
+  m$time = v
+  m = reshape2::melt(m, id.vars = "time", variable.name = "group", value.name = "value")
   
-  m =  reshape2::melt(m, , id.vars = NULL)
-  m$time = rep(v, length(unique(d$group)))
+  if (!normal) m$value[m$value < 0] = 0
   
-  colnames(m)       = c("group","value","time")
+  # 4. Harmonized Labeling (Strictly 5 numbers)
+  brks <- seq(0, max_plot_time, length.out = 5)
   
-  if(normal==FALSE) {m$value[which(m$value<0)] = 0}
-  
-  gg1 = ggplot(d, aes(x=time, y=value, group=group, color=group)) +
-    geom_errorbar(aes(ymin=value-se, ymax=value+se), width=.4) +
-    geom_point(size=2, shape=19) +
-    xlab("Time (h)") +
-    ylab("Log2 normalized counts") +
-    ggtitle(ID) +
-    scale_x_continuous(breaks=seq(0,period+6,6)) +
-    theme_bw(base_size = 10) +
-    theme(aspect.ratio = 1, panel.grid.minor=element_blank(), legend.position = "right") +
-    geom_line(aes(x=time, y=(value), group=group), data = m, position=position_dodge(width=0.5)) +
+  # 5. Plotting
+  gg1 = ggplot(d, aes(x = time, y = value, color = group)) + 
+    geom_errorbar(aes(ymin = value - se, ymax = value + se), width = max_plot_time/40) +
+    geom_point(size = 2) + 
+    geom_line(data = m, aes(x = time, y = value), linewidth = 0.8) + 
+    xlab("Time (h)") + 
+    ylab(ifelse(normal, "Value", "Log2 normalized counts")) + 
+    ggtitle(paste(ID, ifelse(fold, "(Folded)", "(Full Time Series)"))) + 
+    coord_cartesian(xlim = c(0, max_plot_time)) +
+    scale_x_continuous(breaks = brks) +
+    theme_bw(base_size = 10) + 
+    theme(aspect.ratio = 1, 
+          panel.grid.minor = element_blank(), 
+          legend.position = "right") + 
     facet_wrap(~group)
-  
-  gg1
+
+  return(gg1)
 }
 
 #####################################

@@ -62,7 +62,7 @@ dry_lmm_full <- function(data, group, time, ID, period = 24,
     on.exit(try(parallel::stopCluster(cl), silent = TRUE), add = TRUE)
     parallel::clusterEvalQ(cl, {
       suppressPackageStartupMessages(library(glmmTMB))
-      suppressPackageStartupMessages(library(dryRlmm))
+      suppressPackageStartupMessages(library(dryR))
     })
   }
   papply <- .make_papply(parallel_type, n.cores, cl)
@@ -120,7 +120,7 @@ dry_lmm_full <- function(data, group, time, ID, period = 24,
   fit <- papply(rownames(data), function(g) {
     x <- as.numeric(data[g, ])
     w <- if (!is.null(weights)) weights[g, ] else NULL
-    dryRlmm:::.do_all_glmmTMB_full(x, my_mat = models, ID = ID,
+    dryR:::.do_all_glmmTMB_full(x, my_mat = models, ID = ID,
                                    s1 = s1, c1 = c1, w = w)
   })
   names(fit) <- rownames(data)
@@ -149,7 +149,7 @@ dry_lmm_full <- function(data, group, time, ID, period = 24,
 
   gene.list <- as.list(rownames(data))
   fit_m <- papply(gene.list, function(g) {
-    dryRlmm:::.do_all_glmmTMB_mr_full(
+    dryR:::.do_all_glmmTMB_mr_full(
       x            = g,
       countData    = data,
       my_mat_r     = models,

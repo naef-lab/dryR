@@ -1,32 +1,45 @@
-Package: dryR
 Type: Package
-Title: Differential RhythmicitY analysis 
-Version: 1.0.0
+Package: dryR
+Title: Differential RhythmicitY analysis
+Version: 1.1.0
 Author: Cedric Gobet and Benjamin Weger
 Maintainer: The package maintainer <cedric.gobet@epfl.ch>
-Description: DryR ( Differential RhythmicitY analysis in R) is a statistical
-     framework based on model selection that is designed to detect and estimate changes 
-     in rhythmic parameters (amplitude and phase) and mean expression in multiple conditions.
-biocViews: Software, BiologicalQuestion
-Imports:
-    combinat,
-    parallel,
-    doParallel,
-    gplots,
-    RColorBrewer,
-    circular,
-    reshape2,
-    stringr,
-    Rmisc,
-    gridExtra
+Description: DryR ( Differential RhythmicitY analysis in R) is a
+    statistical framework based on model selection that is designed to
+    detect and estimate changes in rhythmic parameters (amplitude and
+    phase) and mean expression in multiple conditions.
 Depends:
-    R (>= 3.5.0),
     DESeq2,
-    ggplot2,
-    S4Vectors,
     foreach,
+    ggplot2,
     pheatmap,
-    plotrix
+    plotrix,
+    R (>= 3.5.0),
+    S4Vectors
+Imports:
+    circular,
+    combinat,
+    doParallel,
+    glmmTMB,
+    gplots,
+    gridExtra,
+    parallel,
+    R.utils,
+    RColorBrewer,
+    reshape2,
+    Rmisc,
+    stringr
+Suggests: 
+    biomaRt,
+    cowplot,
+    dplyr,
+    patchwork,
+    scales,
+    testthat (>= 3.0.0),
+    tidyr,
+    viridis
+biocViews: Software, BiologicalQuestion
+Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
